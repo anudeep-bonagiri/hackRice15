@@ -105,7 +105,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <ScoreCard
               type="progress"
-              value={`${userProgress.totalPoints}/600`}
+              value={`${userProgress.totalPoints}/675`}
               label="Total Points"
               subtitle={userProgress.totalPoints >= 400 ? "Graduation Ready!" : `${400 - userProgress.totalPoints} points to graduate`}
               trend={userProgress.totalPoints >= 400 ? 'up' : 'neutral'}
@@ -146,7 +146,7 @@ const Dashboard = () => {
             <CardContent className="space-y-4">
               <ProgressBar
                 current={userProgress.totalPoints}
-                max={600}
+                max={675}
                 label="Overall Progress"
                 variant="cyan"
                 size="lg"
