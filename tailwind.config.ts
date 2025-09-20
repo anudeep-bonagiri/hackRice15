@@ -22,10 +22,26 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          light: "hsl(var(--primary-light))",
+          lighter: "hsl(var(--primary-lighter))",
+          dark: "hsl(var(--primary-dark))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        achievement: {
+          DEFAULT: "hsl(var(--achievement))",
+          foreground: "hsl(var(--achievement-foreground))",
+        },
+        cta: {
+          DEFAULT: "hsl(var(--cta))",
+          foreground: "hsl(var(--cta-foreground))",
+          light: "hsl(var(--cta-light))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -46,16 +62,6 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
         },
       },
       borderRadius: {
@@ -84,6 +90,17 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "mascot-bounce": "mascot-bounce 2s ease-in-out infinite",
+        "mascot-grow": "mascot-grow 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+        "achievement-pulse": "achievement-pulse 2s ease-in-out infinite",
+        "confetti-fall": "confetti-fall 3s linear infinite",
+        "fade-in": "fadeIn 0.5s ease-out",
+        "slide-up": "slideUp 0.6s ease-out",
+      },
+      boxShadow: {
+        'soft': 'var(--shadow-soft)',
+        'card': 'var(--shadow-card)',
+        'achievement': 'var(--shadow-achievement)',
       },
     },
   },

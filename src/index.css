@@ -2,41 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* GrowFi Design System - Gamified Financial Literacy Platform
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* GrowFi Brand Colors */
+    --background: 0 0% 96.1%;
+    --foreground: 145 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 145 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 145 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary Green Palette */
+    --primary: 142 69% 31%; /* #28A745 */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 89 45% 65%; /* #A3D55C */
+    --primary-lighter: 89 50% 75%; /* #B7E27B */
+    --primary-dark: 145 65% 25%; /* #1E7F34 */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary Growth Colors */
+    --secondary: 89 45% 65%; /* #A3D55C */
+    --secondary-foreground: 145 25% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Success & Achievement */
+    --success: 142 69% 31%;
+    --success-foreground: 0 0% 100%;
+    --achievement: 50 100% 50%; /* Gold for achievements */
+    --achievement-foreground: 145 25% 15%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Neutral & Muted */
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 145 15% 45%;
+
+    --accent: 89 50% 75%;
+    --accent-foreground: 145 25% 15%;
+
+    /* CTA & Action Colors */
+    --cta: 145 80% 20%; /* #196F3D */
+    --cta-foreground: 0 0% 100%;
+    --cta-light: 89 65% 80%; /* #C1E887 */
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 145 20% 85%;
+    --input: 145 20% 90%;
+    --ring: 142 69% 31%;
 
-    --radius: 0.5rem;
+    /* Design System Values */
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-growth: linear-gradient(135deg, hsl(var(--primary-lighter)), hsl(var(--primary)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(var(--achievement)));
+    --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(var(--muted)));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.1);
+    --shadow-card: 0 8px 32px -8px hsl(var(--primary) / 0.15);
+    --shadow-achievement: 0 0 40px hsl(var(--achievement) / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +92,49 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 145 25% 8%;
+    --foreground: 89 50% 85%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 145 25% 10%;
+    --card-foreground: 89 50% 85%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 145 25% 10%;
+    --popover-foreground: 89 50% 85%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 89 45% 65%;
+    --primary-foreground: 145 25% 8%;
+    --primary-light: 89 50% 75%;
+    --primary-lighter: 89 55% 80%;
+    --primary-dark: 145 65% 20%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 145 25% 15%;
+    --secondary-foreground: 89 50% 85%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --success: 142 60% 45%;
+    --success-foreground: 145 25% 8%;
+    --achievement: 50 100% 60%;
+    --achievement-foreground: 145 25% 8%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --muted: 145 25% 12%;
+    --muted-foreground: 145 15% 65%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 145 25% 15%;
+    --accent-foreground: 89 50% 85%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --cta: 89 55% 70%;
+    --cta-foreground: 145 25% 8%;
+    --cta-light: 89 65% 75%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 145 25% 20%;
+    --input: 145 25% 18%;
+    --ring: 89 45% 65%;
+
+    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
+    --shadow-achievement: 0 0 40px hsl(var(--achievement) / 0.4);
   }
 }
 
@@ -100,6 +144,108 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+}
+
+@layer components {
+  /* Mascot Animation Classes */
+  .mascot-bounce {
+    animation: mascot-bounce 2s ease-in-out infinite;
+  }
+  
+  .mascot-grow {
+    animation: mascot-grow 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Progress Animations */
+  .progress-fill {
+    transition: width 1s ease-out;
+  }
+
+  /* Achievement Effects */
+  .achievement-glow {
+    box-shadow: var(--shadow-achievement);
+    animation: achievement-pulse 2s ease-in-out infinite;
+  }
+
+  /* Gradient Backgrounds */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-gradient-growth {
+    background: var(--gradient-growth);
+  }
+  
+  .bg-gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+
+  /* Interactive Elements */
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* CTA Buttons */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary-dark transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .btn-cta {
+    @apply bg-cta text-cta-foreground hover:bg-cta-light hover:text-foreground transition-all duration-300 transform hover:scale-105;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* Keyframe Animations */
+@keyframes mascot-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes mascot-grow {
+  0% { transform: scale(0.8) rotate(-10deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes achievement-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
 }
