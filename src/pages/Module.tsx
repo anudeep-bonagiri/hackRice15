@@ -193,7 +193,7 @@ const Module = () => {
 
   const module = id ? moduleData[parseInt(id) as keyof typeof moduleData] : null;
   const question = module?.questions[currentQuestion];
-  const progress = module ? ((currentQuestion + (answered ? 1 : 0)) / module.questions.length) * 100 : 0;
+  const progress = module ? (correctAnswers / module.questions.length) * 100 : 0;
 
   // Calculate points and progress based on user's current state
   const moduleId = parseInt(id || '1');
@@ -255,8 +255,9 @@ const Module = () => {
     const updatedModuleProgress = { ...user.moduleProgress };
     updatedModuleProgress[moduleId] = newPoints;
 
-    const newTotalPoints = currentTotalPoints + (newPoints - currentModuleProgress);
-    const newCompletedModules = newTotalPoints >= 100 ? (user.completedModules || 0) + 1 : user.completedModules || 0;
+    // Calculate total points by summing all module progress
+    const newTotalPoints = Object.values(updatedModuleProgress).reduce((sum, points) => sum + points, 0);
+    const newCompletedModules = Object.values(updatedModuleProgress).filter(points => points >= 100).length;
     const newCurrentLevel = Math.floor(newTotalPoints / 100) + 1;
     const newCreditScore = Math.min(850, Math.max(300, 300 + (newTotalPoints * 2)));
     const newAchievements = Math.floor(newTotalPoints / 200) + 1;
@@ -280,10 +281,11 @@ const Module = () => {
     const finalPoints = points + moduleCompletionBonus;
     
     const updatedModuleProgress = { ...user.moduleProgress };
-    updatedModuleProgress[moduleId] = 75; // Mark module as 100% complete
+    updatedModuleProgress[moduleId] = 100; // Mark module as 100% complete
 
-    const newTotalPoints = currentTotalPoints + (finalPoints - currentModuleProgress);
-    const newCompletedModules = (user.completedModules || 0) + 1;
+    // Calculate total points by summing all module progress
+    const newTotalPoints = Object.values(updatedModuleProgress).reduce((sum, points) => sum + points, 0);
+    const newCompletedModules = Object.values(updatedModuleProgress).filter(points => points >= 100).length;
     const newCurrentLevel = Math.floor(newTotalPoints / 100) + 1;
     const newCreditScore = Math.min(850, Math.max(300, 300 + (newTotalPoints * 2)));
     const newAchievements = Math.floor(newTotalPoints / 200) + 1;
