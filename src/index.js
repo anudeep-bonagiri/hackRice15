@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { connectDB } from "./db.js";
 import goalRoutes from "./routes/goalRoutes.js";
 import Goal from "./models/Goal.js";
@@ -8,14 +9,18 @@ import Goal from "./models/Goal.js";
 dotenv.config();
 
 const app = express();
+
+// Middleware
+app.use(cors());
 app.use(express.json());
 
 connectDB();
 
-// Test function to create a sample goal (for database verification)
+// Test function disabled to prevent server crashes during development
+// You can enable this later once Auth0 is fully configured
+/*
 const createTestGoal = async () => {
   try {
-    // Check if test goal already exists
     const existingGoal = await Goal.findOne({ title: "Test Goal - Save $500" });
     if (existingGoal) {
       console.log("✅ Test goal already exists in database");
@@ -23,7 +28,7 @@ const createTestGoal = async () => {
     }
 
     const testGoal = new Goal({
-      userId: "12345", // Test user ID
+      userId: "auth0|test123",
       title: "Test Goal - Save $500",
       targetAmount: 500,
       currentAmount: 0,
@@ -36,10 +41,26 @@ const createTestGoal = async () => {
     console.log("❌ Error creating test goal:", error.message);
   }
 };
-
-// Create test goal after DB connection
 setTimeout(createTestGoal, 1000);
+*/
 
+// Public routes (no auth required)
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "GrowFi API is running!", 
+    endpoints: {
+      goals: "/api/goals",
+      health: "/health"
+    }
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
+});
+
+// Protected routes (Auth0 required)
 app.use("/api/goals", goalRoutes);
 
-app.listen(5000, () => console.log("Server running on http://localhost:5000"));
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
