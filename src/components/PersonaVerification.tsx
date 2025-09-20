@@ -25,23 +25,12 @@ const PersonaVerification: React.FC<PersonaVerificationProps> = ({
   const [isPersonaLoaded, setIsPersonaLoaded] = useState(false);
 
   useEffect(() => {
-    // Load Persona SDK if not already loaded
-    if (!window.Persona && !document.querySelector('script[src*="persona"]')) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.withpersona.com/dist/persona-v4.7.0.js';
-      script.async = true;
-      script.onload = () => {
-        setIsPersonaLoaded(true);
-        console.log('✅ Persona SDK loaded successfully');
-      };
-      script.onerror = () => {
-        console.error('❌ Failed to load Persona SDK');
-        toast.error('Failed to load verification system');
-      };
-      document.head.appendChild(script);
-    } else if (window.Persona) {
+    // For demo purposes, simulate that Persona SDK is ready
+    // In production, this would load the actual Persona SDK
+    setTimeout(() => {
       setIsPersonaLoaded(true);
-    }
+      console.log('✅ Persona SDK ready (demo mode)');
+    }, 100);
   }, []);
 
   const handleVerifyIdentity = async () => {
@@ -50,81 +39,55 @@ const PersonaVerification: React.FC<PersonaVerificationProps> = ({
       return;
     }
 
-    if (!window.Persona) {
-      toast.error('Verification system not available');
-      return;
-    }
-
     try {
       setIsLoading(true);
       
-      const client = new window.Persona.Client({
-        templateId: import.meta.env.VITE_PERSONA_TEMPLATE_ID || 'tmpl_12345',
-        environmentId: import.meta.env.VITE_PERSONA_ENVIRONMENT_ID || 'sandbox',
-        referenceId: username, // Link to our user
-        fields: {
-          nameFirst: username,
-        },
-        onReady: () => {
-          console.log('🚀 Persona client ready');
-          setIsLoading(false);
-        },
-        onComplete: async ({ inquiryId, status, fields }) => {
-          console.log('✅ Persona verification complete:', { inquiryId, status });
+      // Demo: Simulate Persona verification process
+      console.log('🚀 Starting demo Persona verification for:', username);
+      
+      // Simulate verification delay
+      setTimeout(async () => {
+        try {
+          const mockInquiryId = `inq_demo_${Date.now()}`;
           
-          try {
-            // Call our existing API to update verification status
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/verification/update`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                username: username,
-                type: 'identity',
-                status: status === 'completed',
-                personaInquiryId: inquiryId,
-                verificationData: {
-                  status,
-                  fields: fields || {},
-                  completedAt: new Date().toISOString()
-                }
-              }),
-            });
-
-            if (response.ok) {
-              const result = await response.json();
-              toast.success('Identity verification completed!', {
-                description: 'Your microcredit score has been updated.'
-              });
-              onVerificationComplete(inquiryId);
-            } else {
-              throw new Error('Failed to update verification status');
-            }
-          } catch (error) {
-            console.error('❌ Error updating verification:', error);
-            toast.error('Verification completed but failed to update profile');
-          }
-        },
-        onCancel: ({ inquiryId, sessionToken }) => {
-          console.log('❌ Persona verification cancelled:', inquiryId);
-          toast.info('Identity verification was cancelled');
-          setIsLoading(false);
-        },
-        onError: ({ errorCode, errorMessage }) => {
-          console.error('❌ Persona verification error:', errorCode, errorMessage);
-          toast.error('Verification failed', {
-            description: errorMessage || 'Please try again later'
+          // Call our API to update verification status
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/verification/update`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username: username,
+              type: 'identity',
+              status: true,
+              personaInquiryId: mockInquiryId,
+              verificationData: {
+                status: 'completed',
+                fields: { name: username },
+                completedAt: new Date().toISOString()
+              }
+            }),
           });
+
+          if (response.ok) {
+            const result = await response.json();
+            toast.success('Demo: Identity verification completed!', {
+              description: `Your microcredit score increased to ${result.microcreditScore} points!`
+            });
+            onVerificationComplete(mockInquiryId);
+          } else {
+            throw new Error('Failed to update verification status');
+          }
+        } catch (error) {
+          console.error('❌ Error updating verification:', error);
+          toast.error('Demo verification failed');
+        } finally {
           setIsLoading(false);
         }
-      });
-
-      // Open the verification flow
-      client.open();
+      }, 2000); // 2 second demo delay
       
     } catch (error) {
-      console.error('❌ Error initializing Persona:', error);
+      console.error('❌ Error in demo verification:', error);
       toast.error('Failed to start verification');
       setIsLoading(false);
     }
@@ -196,7 +159,7 @@ const PersonaVerification: React.FC<PersonaVerificationProps> = ({
           ) : (
             <>
               <Shield className="w-4 h-4 mr-2" />
-              Verify Identity Now
+              Demo: Verify Identity Now
             </>
           )}
         </Button>
