@@ -1,7 +1,12 @@
 import express from "express";
 import User from "../models/User.js";
+// import { checkJwt, getUser } from "../middleware/auth.js"; // TODO: Enable when auth middleware is ready
 
 const router = express.Router();
+
+// TODO: Apply auth middleware to all routes when ready
+// router.use(checkJwt);
+// router.use(getUser);
 
 // GET /api/users/profile - Get user profile
 router.get("/profile", async (req, res) => {
@@ -251,6 +256,88 @@ router.get("/stats", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Additional routes from remote version - TODO: integrate when auth middleware ready
+
+// PUT /api/users/progress - Update user progress (from remote version)
+router.put("/progress", async (req, res) => {
+  try {
+    // TODO: Use req.user.id when auth middleware is ready
+    const { auth0Id, totalPoints, completedModules, currentLevel, creditScore, achievements, streak, moduleProgress } = req.body;
+    
+    if (!auth0Id) {
+      return res.status(400).json({ error: "auth0Id is required" });
+    }
+    
+    const updateData = {};
+    if (totalPoints !== undefined) updateData.totalPoints = totalPoints;
+    if (completedModules !== undefined) updateData.completedModulesCount = completedModules;
+    if (currentLevel !== undefined) updateData.currentLevel = currentLevel;
+    if (creditScore !== undefined) updateData.creditScore = creditScore;
+    if (achievements !== undefined) updateData.achievementsCount = achievements;
+    if (streak !== undefined) updateData.streak = streak;
+    if (moduleProgress !== undefined) updateData.moduleProgress = new Map(Object.entries(moduleProgress));
+    
+    const user = await User.findOneAndUpdate(
+      { auth0Id },
+      updateData,
+      { new: true, upsert: true }
+    );
+    
+    res.json({
+      success: true,
+      user: {
+        id: user._id,
+        auth0Id: user.auth0Id,
+        name: user.name,
+        email: user.email,
+        totalPoints: user.totalPoints,
+        completedModules: user.completedModulesCount,
+        currentLevel: user.currentLevel,
+        creditScore: user.creditScore,
+        achievements: user.achievementsCount,
+        streak: user.streak,
+        moduleProgress: Object.fromEntries(user.moduleProgress),
+        preferences: user.preferences
+      }
+    });
+  } catch (error) {
+    console.error("❌ Error updating user progress:", error);
+    res.status(500).json({ 
+      success: false, 
+      error: "Failed to update user progress" 
+    });
+  }
+});
+
+// PUT /api/users/preferences - Update user preferences (from remote version)
+router.put("/preferences", async (req, res) => {
+  try {
+    // TODO: Use req.user.id when auth middleware is ready
+    const { auth0Id, preferences } = req.body;
+    
+    if (!auth0Id) {
+      return res.status(400).json({ error: "auth0Id is required" });
+    }
+    
+    const user = await User.findOneAndUpdate(
+      { auth0Id },
+      { preferences },
+      { new: true, upsert: true }
+    );
+    
+    res.json({
+      success: true,
+      preferences: user.preferences
+    });
+  } catch (error) {
+    console.error("❌ Error updating user preferences:", error);
+    res.status(500).json({ 
+      success: false, 
+      error: "Failed to update user preferences" 
+    });
   }
 });
 

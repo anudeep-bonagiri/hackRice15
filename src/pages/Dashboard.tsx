@@ -1,38 +1,60 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreCard } from '@/components/ScoreCard';
-import { XPProgressBar } from '@/components/XPProgressBar';
-import { BookOpen, Trophy, TrendingUp, Coins } from 'lucide-react';
-import { UserProgress, FrogStage } from '@/lib/points';
+import { AchievementSystem } from '@/components/AchievementSystem';
+import { useUser } from '@/hooks/useUser';
+import { BookOpen, Trophy, TrendingUp, Coins, Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [userProgress, setUserProgress] = useState<UserProgress>({
-    xp: 150,
-    streak: 5,
-    lastActiveDate: new Date().toISOString(),
-    currentStage: 'Froglet',
-    xpToNextStage: 100
-  });
-  const [previousXP, setPreviousXP] = useState(0);
-  
-  // Additional dashboard data
-  const [dashboardData] = useState({
-    completedModules: 1,
-    creditScore: 720,
-    achievements: 3
-  });
+  const { user, loading, error, exitDemoMode, isDemoMode } = useUser();
 
-  const microcreditAmount = Math.min(Math.pow(userProgress.xp / 10, 1.8) * 10, 7000);
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading your progress...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const handleEvolution = (newStage: FrogStage) => {
-    console.log(`Frog evolved to: ${newStage}`);
-    // Here you could trigger additional animations or notifications
+  // Show error state only if there's a real error (not handled gracefully)
+  if (error && !user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error loading your progress: {error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Use user data or fallback to zero values for new users
+  const userProgress = user ? {
+    totalPoints: user.totalPoints,
+    completedModules: user.completedModules,
+    currentLevel: user.currentLevel,
+    creditScore: user.creditScore,
+    achievements: user.achievements,
+    streak: user.streak
+  } : {
+    totalPoints: 0,
+    completedModules: 0,
+    currentLevel: 1,
+    creditScore: 0,
+    achievements: 0,
+    streak: 0
   };
+
+  const microcreditAmount = Math.min(Math.pow(userProgress.totalPoints / 10, 1.8) * 10, 7000);
 
   return (
     <div className="min-h-screen bg-background">
@@ -45,16 +67,43 @@ const Dashboard = () => {
               <p className="text-primary-foreground/80 mt-1">Keep growing your financial knowledge</p>
             </div>
             <Mascot 
-              xp={userProgress.xp}
-              previousXP={previousXP}
+              level={userProgress.currentLevel} 
+              points={userProgress.totalPoints}
               size="lg"
-              onEvolution={handleEvolution}
             />
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
+        {/* Demo Mode Notice */}
+        {isDemoMode && (
+          <div className="mb-6 rounded-lg bg-gradient-to-r from-cta/10 to-primary/10 border border-cta/20 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-cta/20 rounded-full flex items-center justify-center">
+                  <span className="text-cta text-sm">🎮</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">Demo Mode Active</h3>
+                  <p className="text-sm text-muted-foreground">You're exploring GrowFi with sample data</p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  exitDemoMode();
+                  navigate('/login');
+                }}
+                className="border-cta/30 text-cta hover:bg-cta/10"
+              >
+                Exit Demo
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Progress Overview */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-foreground mb-6">Your Growth Journey</h2>
@@ -185,19 +234,17 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Recent Achievements */}
-        {userProgress.achievements > 0 && (
+        {/* Achievement System */}
+        {user && (
           <section>
-            <h2 className="text-2xl font-bold text-foreground mb-6">Recent Achievements</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="achievement-glow bg-achievement/10 border-achievement/30">
-                <CardContent className="p-4 text-center">
-                  <Trophy className="w-8 h-8 text-achievement mx-auto mb-2" />
-                  <h3 className="font-semibold text-achievement">First Module Complete!</h3>
-                  <p className="text-sm text-muted-foreground">Budget Boss mastery achieved</p>
-                </CardContent>
-              </Card>
-            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-6">Achievements</h2>
+            <AchievementSystem 
+              user={user} 
+              onAchievementUnlocked={(achievement) => {
+                console.log('Achievement unlocked:', achievement.title);
+                // Could add toast notification here
+              }} 
+            />
           </section>
         )}
       </main>

@@ -26,13 +26,15 @@ const userSchema = new mongoose.Schema({
   },
   creditScore: { type: Number, min: 300, max: 850 },
   
-  // Points and rewards system
+  // Points and rewards system (combining both schemas)
   points: { type: Number, default: 0, min: 0 },
+  totalPoints: { type: Number, default: 0 }, // for compatibility with remote
   totalPointsEarned: { type: Number, default: 0, min: 0 }, // lifetime points
   pointsRedeemed: { type: Number, default: 0, min: 0 },
   
   // XP and progression system
   xp: { type: Number, default: 0, min: 0 },
+  currentLevel: { type: Number, default: 1 }, // for compatibility with remote
   streak: { type: Number, default: 0, min: 0 },
   lastActiveDate: { type: String, default: () => new Date().toISOString() },
   currentStage: { 
@@ -56,12 +58,25 @@ const userSchema = new mongoose.Schema({
     repaymentScore: { type: Number, min: 0, max: 100 } // how well they repaid
   }],
   
-  // Learning progress
+  // Learning progress (enhanced to support both schemas)
   completedModules: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Module' }],
-  moduleProgress: { type: Map, of: Number, default: {} }, // moduleId -> progress percentage
+  completedModulesCount: { type: Number, default: 0 }, // for compatibility
+  moduleProgress: {
+    type: Map,
+    of: Number,
+    default: new Map([
+      [1, 0], // Budget Boss
+      [2, 0], // Debt Destroyer
+      [3, 0], // Emergency Fund Fortress
+      [4, 0], // Investment Explorer
+      [5, 0], // Credit Champion
+      [6, 0]  // Wealth Builder Pro
+    ])
+  },
   
-  // Achievements and badges
+  // Achievements and badges (supporting both formats)
   achievements: [{ type: String }],
+  achievementsCount: { type: Number, default: 0 }, // for compatibility
   badges: [{ type: String }],
   
   // Financial goals and tracking
@@ -73,7 +88,7 @@ const userSchema = new mongoose.Schema({
     priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' }
   }],
   
-  // Preferences and settings
+  // Preferences and settings (merged from both schemas)
   preferences: {
     currency: { type: String, default: 'USD' },
     language: { type: String, default: 'en' },
@@ -85,7 +100,8 @@ const userSchema = new mongoose.Schema({
     privacy: {
       shareProgress: { type: Boolean, default: false },
       showOnLeaderboard: { type: Boolean, default: true }
-    }
+    },
+    theme: { type: String, default: 'light' } // from remote
   },
   
   // Verification status

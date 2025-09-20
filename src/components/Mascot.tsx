@@ -1,74 +1,44 @@
 import { useState, useEffect } from 'react';
-import growFiLogo from '@/assets/GrowFi.png';
+import tadpoleMascot from '@/assets/tadpole-mascot.png';
 import frogMascot from '@/assets/frog-mascot.png';
-import { getLevel, FrogStage } from '@/lib/points';
 
 interface MascotProps {
-  xp: number;
-  previousXP?: number;
+  level: number;
+  points: number;
   isAnimating?: boolean;
   size?: 'sm' | 'md' | 'lg';
-  onEvolution?: (newStage: FrogStage) => void;
 }
 
-export const Mascot = ({ 
-  xp, 
-  previousXP = 0, 
-  isAnimating = false, 
-  size = 'md',
-  onEvolution 
-}: MascotProps) => {
+export const Mascot = ({ level, points, isAnimating = false, size = 'md' }: MascotProps) => {
   const [showEvolution, setShowEvolution] = useState(false);
   
-  // Get current stage based on XP
-  const currentStage = getLevel(xp);
-  const previousStage = previousXP > 0 ? getLevel(previousXP) : 'Tadpole';
-  
-  // Determine which image to show based on stage
-  const getMascotImage = (stage: FrogStage) => {
-    switch (stage) {
-      case 'Tadpole':
-        return growFiLogo;
-      case 'Froglet':
-      case 'Young Frog':
-      case 'Wise Frog':
-        return frogMascot;
-      default:
-        return growFiLogo;
-    }
-  };
-  
-  const mascotImage = getMascotImage(currentStage);
+  // Mascot evolves at different thresholds
+  const isEvolved = points >= 300; // Halfway to graduation
+  const mascotImage = isEvolved ? frogMascot : tadpoleMascot;
   
   const sizeClasses = {
-    sm: 'w-16 h-16',
-    md: 'w-24 h-24',
-    lg: 'w-40 h-40'
+    sm: 'w-12 h-12',
+    md: 'w-20 h-20',
+    lg: 'w-32 h-32'
   };
 
-  // Check if user has evolved to a new stage
-  const hasEvolved = currentStage !== previousStage && previousXP > 0;
-
   useEffect(() => {
-    if (isAnimating || hasEvolved) {
+    if (isAnimating) {
       setShowEvolution(true);
-      if (hasEvolved && onEvolution) {
-        onEvolution(currentStage);
-      }
       const timer = setTimeout(() => setShowEvolution(false), 800);
       return () => clearTimeout(timer);
     }
-  }, [isAnimating, hasEvolved, currentStage, onEvolution]);
+  }, [isAnimating]);
 
   return (
     <div className="relative flex items-center justify-center">
       <img
         src={mascotImage}
-        alt={`GrowFi ${currentStage} Mascot`}
+        alt={isEvolved ? "GrowFi Frog Mascot" : "GrowFi Tadpole Mascot"}
         className={`
           ${sizeClasses[size]} 
           object-contain
-          ${isAnimating ? 'animate-mascot-grow' : ''}
+          ${isAnimating ? 'animate-mascot-grow' : 'mascot-bounce'}
           ${showEvolution ? 'achievement-glow' : ''}
           transition-all duration-300
         `}

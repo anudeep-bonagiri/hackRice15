@@ -289,6 +289,13 @@ const Landing = () => {
             <div className="hidden shrink-0 items-center gap-1.5 lg:flex">
               <Button
                 variant="ghost"
+                onClick={() => navigate("/demo")}
+                className="rounded-full px-3.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink transition hover:bg-brand/10"
+              >
+                Try Demo
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => navigate("/login")}
                 className="rounded-full px-3.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink transition hover:bg-brand/10"
               >
@@ -363,6 +370,16 @@ const Landing = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
+                    navigate("/demo");
+                    setMobileOpen(false);
+                  }}
+                  className="rounded-xl border-ink/10 px-5 py-3 text-base font-semibold text-ink"
+                >
+                  Try Demo
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
                     navigate("/login");
                     setMobileOpen(false);
                   }}
@@ -424,6 +441,13 @@ const Landing = () => {
               </Button>
               <Button
                 variant="ghost"
+                onClick={() => navigate("/demo")}
+                className="w-full rounded-2xl border border-brand/20 bg-transparent px-8 py-4 text-base font-semibold text-ink transition hover:bg-brand/10 sm:w-auto"
+              >
+                Try Demo
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => navigate("/login")}
                 className="w-full rounded-2xl border border-brand/20 bg-transparent px-8 py-4 text-base font-semibold text-ink transition hover:bg-brand/10 sm:w-auto"
               >
@@ -439,6 +463,10 @@ const Landing = () => {
               <div className="inline-flex items-center gap-2 rounded-full bg-ink/5 px-4 py-2">
                 <TrendingUp className="h-4 w-4 text-brand" />
                 7,000+ points to unlock
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-ink/5 px-4 py-2">
+                <BadgeCheck className="h-4 w-4 text-brand" />
+                Loved by 120k+ learners
               </div>
             </div>
           </div>
