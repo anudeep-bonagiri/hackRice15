@@ -440,6 +440,10 @@ const Landing = () => {
                 <TrendingUp className="h-4 w-4 text-brand" />
                 7,000+ points to unlock
               </div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-ink/5 px-4 py-2">
+                <BadgeCheck className="h-4 w-4 text-brand" />
+                Loved by 120k+ learners
+              </div>
             </div>
           </div>
 

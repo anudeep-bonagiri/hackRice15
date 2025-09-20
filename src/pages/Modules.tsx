@@ -85,7 +85,7 @@ const Modules = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/')}
               className="bg-white/20 border-white/30 text-white hover:bg-white/30"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
