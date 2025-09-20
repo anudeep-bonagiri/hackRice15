@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth0 Debug Test - HackRice15</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .config { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .error { color: red; background: #ffe6e6; padding: 10px; border-radius: 5px; }
+        .success { color: green; background: #e6ffe6; padding: 10px; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 10px 0; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Auth0 Configuration Debug - HackRice15</h1>
+    <div id="status"></div>
+    
+    <div class="config">
+        <h3>Current Configuration:</h3>
+        <p><strong>Domain:</strong> <span id="domain"></span></p>
+        <p><strong>Client ID:</strong> <span id="clientId"></span></p>
+        <p><strong>Redirect URI:</strong> <span id="redirectUri"></span></p>
+        <p><strong>Current URL:</strong> <span id="currentUrl"></span></p>
+    </div>
+    
+    <button onclick="testAuth0Connection()">Test Auth0 Connection</button>
+    <button onclick="testAuth0Login()">Test Auth0 Login Flow</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        // Configuration
+        const config = {
+            domain: 'dev-kfzco21gzardmiob.us.auth0.com',
+            clientId: 'g3HaE6ZlZ7ENdq9BWPQ8rUd4trFr3tSt',
+            redirectUri: `${window.location.origin}/callback`
+        };
+        
+        // Display configuration
+        document.getElementById('domain').textContent = config.domain;
+        document.getElementById('clientId').textContent = config.clientId;
+        document.getElementById('redirectUri').textContent = config.redirectUri;
+        document.getElementById('currentUrl').textContent = window.location.origin;
+        
+        function testAuth0Connection() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Testing Auth0 connection...</p>';
+            
+            // Test if Auth0 domain is reachable
+            const testUrl = `https://${config.domain}/.well-known/jwks.json`;
+            
+            fetch(testUrl)
+                .then(response => {
+                    if (response.ok) {
+                        result.innerHTML = '<div class="success">✅ Auth0 domain is reachable and responding correctly</div>';
+                    } else {
+                        result.innerHTML = '<div class="error">❌ Auth0 domain returned error: ' + response.status + '</div>';
+                    }
+                })
+                .catch(error => {
+                    result.innerHTML = '<div class="error">❌ Cannot reach Auth0 domain: ' + error.message + '</div>';
+                });
+        }
+        
+        function testAuth0Login() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Redirecting to Auth0 login...</p>';
+            
+            // Construct Auth0 login URL
+            const params = new URLSearchParams({
+                response_type: 'code',
+                client_id: config.clientId,
+                redirect_uri: config.redirectUri,
+                scope: 'openid profile email'
+            });
+            
+            const authUrl = `https://${config.domain}/authorize?${params}`;
+            
+            console.log('Auth URL:', authUrl);
+            
+            // Small delay to show the message
+            setTimeout(() => {
+                window.location.href = authUrl;
+            }, 1000);
+        }
+        
+        // Check if we're returning from Auth0
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('code')) {
+            document.getElementById('status').innerHTML = '<div class="success">✅ Successfully returned from Auth0 with authorization code!</div>';
+        } else if (urlParams.has('error')) {
+            document.getElementById('status').innerHTML = '<div class="error">❌ Auth0 returned error: ' + urlParams.get('error_description') + '</div>';
+        }
+    </script>
+</body>
+</html>
