@@ -49,10 +49,6 @@ const Login = () => {
               Back to Home
             </Button>
             
-            <div className="flex items-center gap-3">
-              <Mascot level={1} points={0} size="md" />
-              <h1 className="text-2xl font-bold">GrowFi</h1>
-            </div>
           </div>
         </div>
       </header>

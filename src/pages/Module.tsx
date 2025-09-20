@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ProgressBar';
 import { Mascot } from '@/components/Mascot';
+import { XPProgressBar } from '@/components/XPProgressBar';
 import { ArrowLeft, CheckCircle, XCircle, MessageCircle, Lightbulb } from 'lucide-react';
+import { 
+  calculateQuizXP, 
+  updateUserProgress, 
+  updateStreak, 
+  FrogStage,
+  UserProgress 
+} from '@/lib/points';
 
 const Module = () => {
   const { id } = useParams();
@@ -14,6 +22,18 @@ const Module = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
   const [showMascotAnimation, setShowMascotAnimation] = useState(false);
+  
+  // XP and progression state
+  const [userProgress, setUserProgress] = useState<UserProgress>({
+    xp: 0,
+    streak: 0,
+    lastActiveDate: new Date().toISOString(),
+    currentStage: 'Tadpole',
+    xpToNextStage: 50
+  });
+  const [previousXP, setPreviousXP] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
 
   // Sample module data - expanding to include multiple modules
   const moduleData = {
@@ -79,6 +99,13 @@ const Module = () => {
   const question = module?.questions[currentQuestion];
   const progress = module ? ((currentQuestion + (answered ? 1 : 0)) / module.questions.length) * 100 : 0;
 
+  // Initialize total questions when module loads
+  useEffect(() => {
+    if (module) {
+      setTotalQuestions(module.questions.length);
+    }
+  }, [module]);
+
   if (!module) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -100,7 +127,10 @@ const Module = () => {
     setSelectedAnswer(answerIndex);
     setAnswered(true);
     
-    if (answerIndex === question.correct) {
+    const isCorrect = answerIndex === question.correct;
+    
+    if (isCorrect) {
+      setCorrectAnswers(prev => prev + 1);
       setPoints(points + 50);
       setShowMascotAnimation(true);
       setTimeout(() => setShowMascotAnimation(false), 1000);
@@ -113,9 +143,29 @@ const Module = () => {
       setSelectedAnswer(null);
       setAnswered(false);
     } else {
-      // Module complete
+      // Module complete - calculate XP and update progress
+      const score = (correctAnswers / totalQuestions) * 100;
+      const xpActions = calculateQuizXP(score, totalQuestions);
+      
+      // Update streak
+      const newStreak = updateStreak(userProgress.streak, userProgress.lastActiveDate);
+      
+      // Update user progress
+      const updatedProgress = updateUserProgress(userProgress, xpActions);
+      updatedProgress.streak = newStreak;
+      updatedProgress.lastActiveDate = new Date().toISOString();
+      
+      setPreviousXP(userProgress.xp);
+      setUserProgress(updatedProgress);
+      
+      // Navigate back to modules
       navigate('/modules');
     }
+  };
+
+  const handleEvolution = (newStage: FrogStage) => {
+    console.log(`Frog evolved to: ${newStage}`);
+    // Here you could trigger additional animations or notifications
   };
 
   const isCorrect = selectedAnswer === question.correct;
@@ -144,13 +194,14 @@ const Module = () => {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <div className="text-lg font-bold">{points} pts</div>
-                <div className="text-xs text-primary-foreground/80">Current Score</div>
+                <div className="text-lg font-bold">{userProgress.xp} XP</div>
+                <div className="text-xs text-primary-foreground/80">Current XP</div>
               </div>
               <Mascot 
-                level={1} 
-                points={points}
+                xp={userProgress.xp}
+                previousXP={previousXP}
                 isAnimating={showMascotAnimation}
+                onEvolution={handleEvolution}
               />
             </div>
           </div>
@@ -167,6 +218,18 @@ const Module = () => {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-8">
+        {/* XP Progress Bar */}
+        <div className="mb-8">
+          <XPProgressBar
+            currentXP={userProgress.xp}
+            previousXP={previousXP}
+            streak={userProgress.streak}
+            size="lg"
+            onEvolution={handleEvolution}
+            className="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-lg"
+          />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Question Section */}
           <div className="lg:col-span-2">
@@ -261,8 +324,16 @@ const Module = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Current Points</span>
-                  <span className="font-medium">{points}/100</span>
+                  <span className="text-sm text-muted-foreground">Current XP</span>
+                  <span className="font-medium">{userProgress.xp}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Current Stage</span>
+                  <span className="font-medium">{userProgress.currentStage}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">XP to Next Stage</span>
+                  <span className="font-medium">{userProgress.xpToNextStage}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Questions Left</span>
@@ -271,6 +342,10 @@ const Module = () => {
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Completion</span>
                   <span className="font-medium">{Math.round(progress)}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Streak</span>
+                  <span className="font-medium">{userProgress.streak} days</span>
                 </div>
               </CardContent>
             </Card>

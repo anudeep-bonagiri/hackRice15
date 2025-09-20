@@ -1,25 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreCard } from '@/components/ScoreCard';
+import { XPProgressBar } from '@/components/XPProgressBar';
 import { BookOpen, Trophy, TrendingUp, Coins } from 'lucide-react';
+import { UserProgress, FrogStage } from '@/lib/points';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [userProgress] = useState({
-    totalPoints: 150,
+  const [userProgress, setUserProgress] = useState<UserProgress>({
+    xp: 150,
+    streak: 5,
+    lastActiveDate: new Date().toISOString(),
+    currentStage: 'Froglet',
+    xpToNextStage: 100
+  });
+  const [previousXP, setPreviousXP] = useState(0);
+  
+  // Additional dashboard data
+  const [dashboardData] = useState({
     completedModules: 1,
-    currentLevel: 2,
     creditScore: 720,
-    microcreditEligible: 850, // Exponential based on points
-    achievements: 3,
-    streak: 5
+    achievements: 3
   });
 
-  const microcreditAmount = Math.min(Math.pow(userProgress.totalPoints / 10, 1.8) * 10, 7000);
+  const microcreditAmount = Math.min(Math.pow(userProgress.xp / 10, 1.8) * 10, 7000);
+
+  const handleEvolution = (newStage: FrogStage) => {
+    console.log(`Frog evolved to: ${newStage}`);
+    // Here you could trigger additional animations or notifications
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,9 +45,10 @@ const Dashboard = () => {
               <p className="text-primary-foreground/80 mt-1">Keep growing your financial knowledge</p>
             </div>
             <Mascot 
-              level={userProgress.currentLevel} 
-              points={userProgress.totalPoints}
+              xp={userProgress.xp}
+              previousXP={previousXP}
               size="lg"
+              onEvolution={handleEvolution}
             />
           </div>
         </div>
