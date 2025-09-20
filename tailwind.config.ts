@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["class"],
@@ -13,12 +14,24 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+        heading: ["Outfit", "Poppins", ...defaultTheme.fontFamily.sans],
+        display: ["Outfit", "Poppins", ...defaultTheme.fontFamily.sans],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        brand: "#36D399",
+        "brand-dark": "#0B1220",
+        "brand-accent": "#7C3AED",
+        ink: "#0F172A",
+        "brand-muted": "#64748B",
+        "surface-light": "#FFFFFF",
+        "surface-soft": "#F7FBFF",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
