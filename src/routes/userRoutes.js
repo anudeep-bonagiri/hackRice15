@@ -186,7 +186,7 @@ router.get("/microcredit/eligibility", async (req, res) => {
 // POST /api/users/verification/update - Update verification status
 router.post("/verification/update", async (req, res) => {
   try {
-    const { username, type, status } = req.body;
+    const { username, type, status, personaInquiryId, verificationData } = req.body;
     
     if (!username || !type || status === undefined) {
       return res.status(400).json({ error: "username, type, and status are required" });
@@ -201,7 +201,24 @@ router.post("/verification/update", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     
+    // Update verification status
     user.verified[type] = status;
+    
+    // If this is identity verification with Persona data, store it
+    if (type === 'identity' && personaInquiryId) {
+      user.personaVerification = {
+        inquiryId: personaInquiryId,
+        status: status ? 'completed' : 'failed',
+        completedAt: status ? new Date() : undefined,
+        verificationData: verificationData || {}
+      };
+      
+      console.log(`✅ Persona verification updated for ${username}:`, {
+        inquiryId: personaInquiryId,
+        status: status ? 'completed' : 'failed'
+      });
+    }
+    
     await user.save();
     await user.updateMicrocreditEligibility();
     
@@ -209,9 +226,11 @@ router.post("/verification/update", async (req, res) => {
       message: `${type} verification updated`,
       verified: user.verified,
       microcreditEligible: user.microcreditEligible,
-      microcreditScore: user.microcreditScore
+      microcreditScore: user.microcreditScore,
+      personaVerification: type === 'identity' ? user.personaVerification : undefined
     });
   } catch (error) {
+    console.error('❌ Error updating verification:', error);
     res.status(500).json({ error: error.message });
   }
 });

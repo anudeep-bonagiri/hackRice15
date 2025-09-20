@@ -111,6 +111,17 @@ const userSchema = new mongoose.Schema({
     identity: { type: Boolean, default: false }
   },
   
+  // Persona identity verification data
+  personaVerification: {
+    inquiryId: { type: String },
+    status: { type: String, enum: ['pending', 'completed', 'failed', 'cancelled'] },
+    completedAt: { type: Date },
+    verificationData: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    }
+  },
+  
   // Last updated timestamp
   updatedAt: { type: Date, default: Date.now }
 });

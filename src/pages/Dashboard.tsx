@@ -6,6 +6,7 @@ import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreCard } from '@/components/ScoreCard';
 import { AchievementSystem } from '@/components/AchievementSystem';
+import PersonaVerification from '@/components/PersonaVerification';
 import { useUser } from '@/hooks/useUser';
 import { BookOpen, Trophy, TrendingUp, Coins, Loader2 } from 'lucide-react';
 
@@ -233,6 +234,22 @@ const Dashboard = () => {
             </Card>
           </div>
         </section>
+
+        {/* Identity Verification Section */}
+        {user && (
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-6">Identity Verification</h2>
+            <PersonaVerification
+              username={user.username || 'demo-user'}
+              isVerified={user.verified?.identity || false}
+              onVerificationComplete={(inquiryId) => {
+                console.log('🎉 Verification completed:', inquiryId);
+                // Refresh user data or trigger re-render
+                window.location.reload();
+              }}
+            />
+          </section>
+        )}
 
         {/* Achievement System */}
         {user && (
