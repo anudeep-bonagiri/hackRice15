@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  // Auth0 integration
-  auth0Id: { type: String, required: true, unique: true },
+  // User identification
+  username: { type: String, required: true, unique: true },
   name: String,
-  email: String,
+  email: { type: String, required: true, unique: true },
   createdAt: { type: Date, default: Date.now },
   
   // Additional user profile data (not managed by Auth0)
@@ -65,12 +65,12 @@ const userSchema = new mongoose.Schema({
     type: Map,
     of: Number,
     default: new Map([
-      [1, 0], // Budget Boss
-      [2, 0], // Debt Destroyer
-      [3, 0], // Emergency Fund Fortress
-      [4, 0], // Investment Explorer
-      [5, 0], // Credit Champion
-      [6, 0]  // Wealth Builder Pro
+      ['1', 0], // Budget Boss
+      ['2', 0], // Debt Destroyer
+      ['3', 0], // Emergency Fund Fortress
+      ['4', 0], // Investment Explorer
+      ['5', 0], // Credit Champion
+      ['6', 0]  // Wealth Builder Pro
     ])
   },
   

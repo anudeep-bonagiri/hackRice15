@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 interface UserProgress {
   id: string;
-  auth0Id: string;
+  username: string;
   name: string;
   email: string;
   totalPoints: number;
@@ -69,7 +69,7 @@ export const useUser = (): UseUserReturn => {
     const createDefaultUser = () => {
       const defaultUser: UserProgress = {
         id: 'local-user',
-        auth0Id: 'local',
+        username: 'local',
         name: 'New User',
         email: '',
         totalPoints: 0,
@@ -95,7 +95,7 @@ export const useUser = (): UseUserReturn => {
     const createDemoUser = () => {
       const demoUser: UserProgress = {
         id: 'demo-user',
-        auth0Id: 'demo',
+        username: 'demo',
         name: 'Demo User',
         email: 'demo@growfi.com',
         totalPoints: 150,
@@ -160,7 +160,7 @@ export const useUser = (): UseUserReturn => {
     // Create a new default user
     const defaultUser: UserProgress = {
       id: 'local-user',
-      auth0Id: 'local',
+      username: 'local',
       name: 'New User',
       email: '',
       totalPoints: 0,

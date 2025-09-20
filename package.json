@@ -14,7 +14,6 @@
     "start": "node src/index.js"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^2.5.0",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -52,11 +51,8 @@
     "dotenv": "^17.2.2",
     "embla-carousel-react": "^8.6.0",
     "express": "^5.1.0",
-    "express-jwt": "^8.5.1",
-    "express-oauth-server": "^2.0.0",
     "framer-motion": "^12.23.16",
     "input-otp": "^1.4.2",
-    "jwks-rsa": "^3.2.0",
     "lucide-react": "^0.462.0",
     "mongoose": "^8.18.1",
     "next-themes": "^0.3.0",

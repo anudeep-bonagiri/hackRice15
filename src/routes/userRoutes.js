@@ -11,15 +11,13 @@ const router = express.Router();
 // GET /api/users/profile - Get user profile
 router.get("/profile", async (req, res) => {
   try {
-    // In a real app, you'd get the user ID from the JWT token
-    // For now, we'll use a query parameter or find by auth0Id
-    const { auth0Id } = req.query;
+    const { username } = req.query;
     
-    if (!auth0Id) {
-      return res.status(400).json({ error: "auth0Id is required" });
+    if (!username) {
+      return res.status(400).json({ error: "username is required" });
     }
     
-    const user = await User.findOne({ auth0Id }).populate('completedModules');
+    const user = await User.findOne({ username }).populate('completedModules');
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -33,14 +31,14 @@ router.get("/profile", async (req, res) => {
 // POST /api/users/profile - Create or update user profile
 router.post("/profile", async (req, res) => {
   try {
-    const { auth0Id } = req.body;
+    const { username } = req.body;
     
-    if (!auth0Id) {
-      return res.status(400).json({ error: "auth0Id is required" });
+    if (!username) {
+      return res.status(400).json({ error: "username is required" });
     }
     
     const user = await User.findOneAndUpdate(
-      { auth0Id },
+      { username },
       req.body,
       { new: true, upsert: true, runValidators: true }
     );
@@ -54,14 +52,14 @@ router.post("/profile", async (req, res) => {
 // PUT /api/users/profile/financial - Update financial information
 router.put("/profile/financial", async (req, res) => {
   try {
-    const { auth0Id, income, employmentStatus, creditScore } = req.body;
+    const { username, income, employmentStatus, creditScore } = req.body;
     
-    if (!auth0Id) {
-      return res.status(400).json({ error: "auth0Id is required" });
+    if (!username) {
+      return res.status(400).json({ error: "username is required" });
     }
     
     const user = await User.findOneAndUpdate(
-      { auth0Id },
+      { username },
       { income, employmentStatus, creditScore },
       { new: true, runValidators: true }
     );
@@ -82,13 +80,13 @@ router.put("/profile/financial", async (req, res) => {
 // POST /api/users/points/award - Award points to user
 router.post("/points/award", async (req, res) => {
   try {
-    const { auth0Id, points, xp, reason } = req.body;
+    const { username, points, xp, reason } = req.body;
     
-    if (!auth0Id || !points) {
-      return res.status(400).json({ error: "auth0Id and points are required" });
+    if (!username || !points) {
+      return res.status(400).json({ error: "username and points are required" });
     }
     
-    const user = await User.findOne({ auth0Id });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -117,13 +115,13 @@ router.post("/points/award", async (req, res) => {
 // POST /api/users/modules/complete - Mark module as completed
 router.post("/modules/complete", async (req, res) => {
   try {
-    const { auth0Id, moduleId, pointsAwarded, xpAwarded } = req.body;
+    const { username, moduleId, pointsAwarded, xpAwarded } = req.body;
     
-    if (!auth0Id || !moduleId) {
-      return res.status(400).json({ error: "auth0Id and moduleId are required" });
+    if (!username || !moduleId) {
+      return res.status(400).json({ error: "username and moduleId are required" });
     }
     
-    const user = await User.findOne({ auth0Id });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -150,13 +148,13 @@ router.post("/modules/complete", async (req, res) => {
 // GET /api/users/microcredit/eligibility - Check microcredit eligibility
 router.get("/microcredit/eligibility", async (req, res) => {
   try {
-    const { auth0Id } = req.query;
+    const { username } = req.query;
     
-    if (!auth0Id) {
-      return res.status(400).json({ error: "auth0Id is required" });
+    if (!username) {
+      return res.status(400).json({ error: "username is required" });
     }
     
-    const user = await User.findOne({ auth0Id });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -188,17 +186,17 @@ router.get("/microcredit/eligibility", async (req, res) => {
 // POST /api/users/verification/update - Update verification status
 router.post("/verification/update", async (req, res) => {
   try {
-    const { auth0Id, type, status } = req.body;
+    const { username, type, status } = req.body;
     
-    if (!auth0Id || !type || status === undefined) {
-      return res.status(400).json({ error: "auth0Id, type, and status are required" });
+    if (!username || !type || status === undefined) {
+      return res.status(400).json({ error: "username, type, and status are required" });
     }
     
     if (!['email', 'phone', 'identity'].includes(type)) {
       return res.status(400).json({ error: "Invalid verification type" });
     }
     
-    const user = await User.findOne({ auth0Id });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -221,13 +219,13 @@ router.post("/verification/update", async (req, res) => {
 // GET /api/users/stats - Get user statistics
 router.get("/stats", async (req, res) => {
   try {
-    const { auth0Id } = req.query;
+    const { username } = req.query;
     
-    if (!auth0Id) {
-      return res.status(400).json({ error: "auth0Id is required" });
+    if (!username) {
+      return res.status(400).json({ error: "username is required" });
     }
     
-    const user = await User.findOne({ auth0Id });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -265,10 +263,10 @@ router.get("/stats", async (req, res) => {
 router.put("/progress", async (req, res) => {
   try {
     // TODO: Use req.user.id when auth middleware is ready
-    const { auth0Id, totalPoints, completedModules, currentLevel, creditScore, achievements, streak, moduleProgress } = req.body;
+    const { username, totalPoints, completedModules, currentLevel, creditScore, achievements, streak, moduleProgress } = req.body;
     
-    if (!auth0Id) {
-      return res.status(400).json({ error: "auth0Id is required" });
+    if (!username) {
+      return res.status(400).json({ error: "username is required" });
     }
     
     const updateData = {};
@@ -281,7 +279,7 @@ router.put("/progress", async (req, res) => {
     if (moduleProgress !== undefined) updateData.moduleProgress = new Map(Object.entries(moduleProgress));
     
     const user = await User.findOneAndUpdate(
-      { auth0Id },
+      { username },
       updateData,
       { new: true, upsert: true }
     );
@@ -290,7 +288,7 @@ router.put("/progress", async (req, res) => {
       success: true,
       user: {
         id: user._id,
-        auth0Id: user.auth0Id,
+        username: user.username,
         name: user.name,
         email: user.email,
         totalPoints: user.totalPoints,
@@ -316,14 +314,14 @@ router.put("/progress", async (req, res) => {
 router.put("/preferences", async (req, res) => {
   try {
     // TODO: Use req.user.id when auth middleware is ready
-    const { auth0Id, preferences } = req.body;
+    const { username, preferences } = req.body;
     
-    if (!auth0Id) {
-      return res.status(400).json({ error: "auth0Id is required" });
+    if (!username) {
+      return res.status(400).json({ error: "username is required" });
     }
     
     const user = await User.findOneAndUpdate(
-      { auth0Id },
+      { username },
       { preferences },
       { new: true, upsert: true }
     );

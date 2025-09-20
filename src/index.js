@@ -17,9 +17,7 @@ app.use(express.json());
 
 connectDB();
 
-// Test function disabled to prevent server crashes during development
-// You can enable this later once Auth0 is fully configured
-/*
+// Test goal creation function
 const createTestGoal = async () => {
   try {
     const existingGoal = await Goal.findOne({ title: "Test Goal - Save $500" });
@@ -29,7 +27,7 @@ const createTestGoal = async () => {
     }
 
     const testGoal = new Goal({
-      userId: "auth0|test123",
+      userId: "testuser123",
       title: "Test Goal - Save $500",
       targetAmount: 500,
       currentAmount: 0,
@@ -42,8 +40,8 @@ const createTestGoal = async () => {
     console.log("❌ Error creating test goal:", error.message);
   }
 };
-setTimeout(createTestGoal, 1000);
-*/
+// Uncomment to create test data
+// setTimeout(createTestGoal, 1000);
 
 // Public routes (no auth required)
 app.get("/", (req, res) => {
@@ -69,7 +67,7 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// Protected routes (Auth0 required)
+// API routes
 app.use("/api/goals", goalRoutes);
 app.use("/api/users", userRoutes);
 
