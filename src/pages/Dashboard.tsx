@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mascot } from '@/components/Mascot';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreCard } from '@/components/ScoreCard';
 import { AchievementSystem } from '@/components/AchievementSystem';
@@ -66,11 +66,6 @@ const Dashboard = () => {
               <h1 className="text-3xl font-bold">Welcome back to GrowFi!</h1>
               <p className="text-primary-foreground/80 mt-1">Keep growing your financial knowledge</p>
             </div>
-            <Mascot 
-              level={userProgress.currentLevel} 
-              points={userProgress.totalPoints}
-              size="lg"
-            />
           </div>
         </div>
       </header>
@@ -153,7 +148,7 @@ const Dashboard = () => {
                 current={userProgress.totalPoints}
                 max={600}
                 label="Overall Progress"
-                variant="success"
+                variant="cyan"
                 size="lg"
               />
               <div className="flex justify-between items-center text-sm">

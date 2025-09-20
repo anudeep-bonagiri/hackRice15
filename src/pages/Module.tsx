@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ProgressBar';
-import { Mascot } from '@/components/Mascot';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import { useUser } from '@/hooks/useUser';
 import { ArrowLeft, CheckCircle, XCircle, MessageCircle, Lightbulb, Trophy, Star } from 'lucide-react';
 
@@ -15,7 +15,6 @@ const Module = () => {
   const [points, setPoints] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
-  const [showMascotAnimation, setShowMascotAnimation] = useState(false);
   const [moduleCompleted, setModuleCompleted] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
 
@@ -120,8 +119,6 @@ const Module = () => {
       const newPoints = points + 50;
       setPoints(newPoints);
       setCorrectAnswers(correctAnswers + 1);
-      setShowMascotAnimation(true);
-      setTimeout(() => setShowMascotAnimation(false), 1000);
       
       // Update user progress immediately
       updateUserProgress(newPoints);
@@ -263,10 +260,10 @@ const Module = () => {
                 <div className="text-lg font-bold">{points} pts</div>
                 <div className="text-xs text-primary-foreground/80">Current Score</div>
               </div>
-              <Mascot 
-                level={1} 
-                points={points}
-                isAnimating={showMascotAnimation}
+              <img 
+                src={GrowFiLogo} 
+                alt="GrowFi logo" 
+                className="w-16 h-16 object-contain"
               />
             </div>
           </div>

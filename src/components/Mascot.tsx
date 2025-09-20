@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import tadpoleMascot from '@/assets/tadpole-mascot.png';
 import frogMascot from '@/assets/frog-mascot.png';
 
@@ -7,10 +8,30 @@ interface MascotProps {
   points: number;
   isAnimating?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  useLogo?: boolean; // New prop to use GrowFi logo instead of mascot
 }
 
-export const Mascot = ({ level, points, isAnimating = false, size = 'md' }: MascotProps) => {
+export const Mascot = ({ level, points, isAnimating = false, size = 'md', useLogo = false }: MascotProps) => {
   const [showEvolution, setShowEvolution] = useState(false);
+  
+  // If useLogo is true, always use GrowFi logo without animations
+  if (useLogo) {
+    const sizeClasses = {
+      sm: 'w-12 h-12',
+      md: 'w-20 h-20',
+      lg: 'w-32 h-32'
+    };
+
+    return (
+      <div className="relative flex items-center justify-center">
+        <img
+          src={GrowFiLogo}
+          alt="GrowFi Logo"
+          className={`${sizeClasses[size]} object-contain`}
+        />
+      </div>
+    );
+  }
   
   // Mascot evolves at different thresholds
   const isEvolved = points >= 300; // Halfway to graduation

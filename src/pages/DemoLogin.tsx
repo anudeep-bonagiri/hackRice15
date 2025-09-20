@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mascot } from '@/components/Mascot';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import { ArrowLeft, Play, Eye, Zap } from 'lucide-react';
 
 const DemoLogin = () => {
@@ -42,10 +42,10 @@ const DemoLogin = () => {
                 <p className="text-primary-foreground/80">Experience GrowFi with sample data</p>
               </div>
             </div>
-            <Mascot 
-              level={3} 
-              points={150}
-              size="lg"
+            <img 
+              src={GrowFiLogo} 
+              alt="GrowFi logo" 
+              className="w-16 h-16 object-contain"
             />
           </div>
         </div>

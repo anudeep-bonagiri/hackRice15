@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mascot } from '@/components/Mascot';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import { ArrowLeft, LogIn, UserPlus, Shield, Zap } from 'lucide-react';
 
 const Login = () => {
@@ -46,11 +46,6 @@ const Login = () => {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
-            
-            <div className="flex items-center gap-3">
-              <Mascot level={1} points={0} size="md" />
-              <h1 className="text-2xl font-bold">GrowFi</h1>
-            </div>
           </div>
         </div>
       </header>
@@ -58,7 +53,11 @@ const Login = () => {
       <main className="max-w-md mx-auto px-4 py-12">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <Mascot level={1} points={0} size="lg" />
+            <img 
+              src={GrowFiLogo} 
+              alt="GrowFi logo" 
+              className="w-32 h-32 object-contain"
+            />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
             {isLogin ? 'Welcome Back!' : 'Join GrowFi'}

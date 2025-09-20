@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ProgressBar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useUser } from '@/hooks/useUser';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import { ArrowLeft, FileText, CheckCircle, Clock, Target, DollarSign, Award, Loader2 } from 'lucide-react';
 
 const CreditReport = () => {
@@ -150,7 +151,11 @@ const CreditReport = () => {
             </Button>
           </div>
           <div className="flex items-center gap-3">
-            <FileText className="w-8 h-8" />
+            <img 
+              src={GrowFiLogo} 
+              alt="GrowFi logo" 
+              className="w-20 h-20 object-contain"
+            />
             <div>
               <h1 className="text-3xl font-bold">Financial Progress Statement</h1>
               <p className="text-primary-foreground/80 mt-1">
