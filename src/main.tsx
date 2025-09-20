@@ -6,11 +6,21 @@ import { Auth0Provider } from "@auth0/auth0-react";
 const domain = import.meta.env.VITE_AUTH0_DOMAIN!;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID!;
 
+// Dynamic redirect URI based on current environment
+const getRedirectUri = () => {
+  const origin = window.location.origin;
+  return `${origin}/callback`;
+};
+
+const redirectUri = getRedirectUri();
+
 // Debug Auth0 config
 console.log('Auth0 Config:', {
   domain,
   clientId,
-  redirectUri: `${window.location.origin}/callback`
+  redirectUri,
+  currentOrigin: window.location.origin,
+  environment: import.meta.env.MODE
 });
 
 createRoot(document.getElementById("root")!).render(
@@ -18,7 +28,7 @@ createRoot(document.getElementById("root")!).render(
     domain={domain}
     clientId={clientId}
     authorizationParams={{
-      redirect_uri: `${window.location.origin}/callback`,
+      redirect_uri: redirectUri,
       scope: "openid profile email"
     }}
     useRefreshTokens={true}
