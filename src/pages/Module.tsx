@@ -15,7 +15,7 @@ const Module = () => {
   const [answered, setAnswered] = useState(false);
   const [showMascotAnimation, setShowMascotAnimation] = useState(false);
 
-  // Sample module data - Budget Boss
+  // Sample module data - expanding to include multiple modules
   const moduleData = {
     1: {
       title: "Budget Boss",
@@ -44,15 +44,54 @@ const Module = () => {
           explanation: "Writing down expenses or using a budgeting app helps create awareness and accountability for all spending."
         }
       ]
+    },
+    2: {
+      title: "Debt Destroyer",
+      description: "Learn strategies to eliminate debt effectively",
+      questions: [
+        {
+          question: "What is the debt snowball method?",
+          options: [
+            "Pay minimum on all debts, extra on highest interest",
+            "Pay minimum on all debts, extra on smallest balance",
+            "Pay equal amounts on all debts",
+            "Only pay the largest debt first"
+          ],
+          correct: 1,
+          explanation: "The debt snowball method focuses on paying the smallest debt first to build momentum and motivation."
+        },
+        {
+          question: "What's a good debt-to-income ratio?",
+          options: [
+            "Below 15%",
+            "Below 25%", 
+            "Below 36%",
+            "Below 50%"
+          ],
+          correct: 2,
+          explanation: "A debt-to-income ratio below 36% is generally considered healthy, with housing costs ideally below 28%."
+        }
+      ]
     }
   };
 
   const module = id ? moduleData[parseInt(id) as keyof typeof moduleData] : null;
   const question = module?.questions[currentQuestion];
-  const progress = ((currentQuestion + (answered ? 1 : 0)) / module.questions.length) * 100;
+  const progress = module ? ((currentQuestion + (answered ? 1 : 0)) / module.questions.length) * 100 : 0;
 
   if (!module) {
-    return <div>Module not found</div>;
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Module Not Found</h1>
+          <p className="text-muted-foreground mb-6">This module is not available yet.</p>
+          <Button onClick={() => navigate('/modules')} className="btn-primary">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Modules
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -69,7 +108,7 @@ const Module = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestion < module.questions.length - 1) {
+    if (currentQuestion < (module?.questions.length || 0) - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
       setAnswered(false);
@@ -120,7 +159,7 @@ const Module = () => {
             <ProgressBar
               current={progress}
               max={100}
-              label={`Question ${currentQuestion + 1} of ${module.questions.length}`}
+              label={`Question ${currentQuestion + 1} of ${module?.questions.length || 0}`}
               variant="success"
             />
           </div>
@@ -189,7 +228,7 @@ const Module = () => {
                       )}
                     </div>
                     <Button onClick={handleNext} className="btn-primary">
-                      {currentQuestion < module.questions.length - 1 ? 'Next Question' : 'Complete Module'}
+                      {currentQuestion < (module?.questions.length || 0) - 1 ? 'Next Question' : 'Complete Module'}
                     </Button>
                   </div>
                 )}
@@ -227,7 +266,7 @@ const Module = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Questions Left</span>
-                  <span className="font-medium">{module.questions.length - currentQuestion - 1}</span>
+                  <span className="font-medium">{(module?.questions.length || 0) - currentQuestion - 1}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Completion</span>
