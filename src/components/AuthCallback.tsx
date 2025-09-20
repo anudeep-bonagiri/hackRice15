@@ -9,7 +9,7 @@ const AuthCallback = () => {
   useEffect(() => {
     if (!isLoading && !error) {
       // Auth0 will automatically handle the callback and redirect
-      // We just need to redirect to dashboard after successful auth
+      // Redirect to dashboard after successful auth
       navigate('/dashboard');
     }
   }, [isLoading, error, navigate]);

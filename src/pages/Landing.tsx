@@ -289,6 +289,13 @@ const Landing = () => {
             <div className="hidden shrink-0 items-center gap-1.5 lg:flex">
               <Button
                 variant="ghost"
+                onClick={() => navigate("/demo")}
+                className="rounded-full px-3.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink transition hover:bg-brand/10"
+              >
+                Try Demo
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => navigate("/login")}
                 className="rounded-full px-3.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink transition hover:bg-brand/10"
               >
@@ -363,6 +370,16 @@ const Landing = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
+                    navigate("/demo");
+                    setMobileOpen(false);
+                  }}
+                  className="rounded-xl border-ink/10 px-5 py-3 text-base font-semibold text-ink"
+                >
+                  Try Demo
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
                     navigate("/login");
                     setMobileOpen(false);
                   }}
@@ -421,6 +438,13 @@ const Landing = () => {
               >
                 Get Started
                 <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => navigate("/demo")}
+                className="w-full rounded-2xl border border-brand/20 bg-transparent px-8 py-4 text-base font-semibold text-ink transition hover:bg-brand/10 sm:w-auto"
+              >
+                Try Demo
               </Button>
               <Button
                 variant="ghost"

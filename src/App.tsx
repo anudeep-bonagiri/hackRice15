@@ -7,6 +7,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import AuthCallback from "./components/AuthCallback";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import DemoLogin from "./pages/DemoLogin";
 import Dashboard from "./pages/Dashboard";
 import Modules from "./pages/Modules";
 import Module from "./pages/Module";
@@ -23,6 +24,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/demo" element={<DemoLogin />} />
           <Route path="/callback" element={<AuthCallback />} />
           <Route
             path="/dashboard"

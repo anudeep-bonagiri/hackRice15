@@ -1,19 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ProgressBar';
 import { Mascot } from '@/components/Mascot';
-import { ArrowLeft, CheckCircle, XCircle, MessageCircle, Lightbulb } from 'lucide-react';
+import { useUser } from '@/hooks/useUser';
+import { ArrowLeft, CheckCircle, XCircle, MessageCircle, Lightbulb, Trophy, Star } from 'lucide-react';
 
 const Module = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, updateProgress } = useUser();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [points, setPoints] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
   const [showMascotAnimation, setShowMascotAnimation] = useState(false);
+  const [moduleCompleted, setModuleCompleted] = useState(false);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
 
   // Sample module data - expanding to include multiple modules
   const moduleData = {
@@ -79,6 +83,18 @@ const Module = () => {
   const question = module?.questions[currentQuestion];
   const progress = module ? ((currentQuestion + (answered ? 1 : 0)) / module.questions.length) * 100 : 0;
 
+  // Calculate points and progress based on user's current state
+  const moduleId = parseInt(id || '1');
+  const currentModuleProgress = user?.moduleProgress?.[moduleId] || 0;
+  const currentTotalPoints = user?.totalPoints || 0;
+
+  // Initialize points from current progress
+  useEffect(() => {
+    if (user && moduleId) {
+      setPoints(currentModuleProgress);
+    }
+  }, [user, moduleId, currentModuleProgress]);
+
   if (!module) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -101,9 +117,14 @@ const Module = () => {
     setAnswered(true);
     
     if (answerIndex === question.correct) {
-      setPoints(points + 50);
+      const newPoints = points + 50;
+      setPoints(newPoints);
+      setCorrectAnswers(correctAnswers + 1);
       setShowMascotAnimation(true);
       setTimeout(() => setShowMascotAnimation(false), 1000);
+      
+      // Update user progress immediately
+      updateUserProgress(newPoints);
     }
   };
 
@@ -113,13 +134,108 @@ const Module = () => {
       setSelectedAnswer(null);
       setAnswered(false);
     } else {
-      // Module complete
-      navigate('/modules');
+      // Module complete - calculate final progress and achievements
+      completeModule();
     }
+  };
+
+  const updateUserProgress = (newPoints: number) => {
+    if (!user || !moduleId) return;
+
+    const updatedModuleProgress = { ...user.moduleProgress };
+    updatedModuleProgress[moduleId] = newPoints;
+
+    const newTotalPoints = currentTotalPoints + (newPoints - currentModuleProgress);
+    const newCompletedModules = newTotalPoints >= 100 ? (user.completedModules || 0) + 1 : user.completedModules || 0;
+    const newCurrentLevel = Math.floor(newTotalPoints / 100) + 1;
+    const newCreditScore = Math.min(850, Math.max(300, 300 + (newTotalPoints * 2)));
+    const newAchievements = Math.floor(newTotalPoints / 200) + 1;
+    const newStreak = user.streak || 0;
+
+    updateProgress({
+      totalPoints: newTotalPoints,
+      completedModules: newCompletedModules,
+      currentLevel: newCurrentLevel,
+      creditScore: newCreditScore,
+      achievements: newAchievements,
+      streak: newStreak,
+      moduleProgress: updatedModuleProgress
+    });
+  };
+
+  const completeModule = () => {
+    if (!user || !moduleId) return;
+
+    const moduleCompletionBonus = 25; // Bonus points for completing module
+    const finalPoints = points + moduleCompletionBonus;
+    
+    const updatedModuleProgress = { ...user.moduleProgress };
+    updatedModuleProgress[moduleId] = 100; // Mark module as 100% complete
+
+    const newTotalPoints = currentTotalPoints + (finalPoints - currentModuleProgress);
+    const newCompletedModules = (user.completedModules || 0) + 1;
+    const newCurrentLevel = Math.floor(newTotalPoints / 100) + 1;
+    const newCreditScore = Math.min(850, Math.max(300, 300 + (newTotalPoints * 2)));
+    const newAchievements = Math.floor(newTotalPoints / 200) + 1;
+    const newStreak = (user.streak || 0) + 1;
+
+    updateProgress({
+      totalPoints: newTotalPoints,
+      completedModules: newCompletedModules,
+      currentLevel: newCurrentLevel,
+      creditScore: newCreditScore,
+      achievements: newAchievements,
+      streak: newStreak,
+      moduleProgress: updatedModuleProgress
+    });
+
+    setModuleCompleted(true);
+    
+    // Show completion animation and navigate after delay
+    setTimeout(() => {
+      navigate('/modules');
+    }, 3000);
   };
 
   const isCorrect = selectedAnswer === question.correct;
   const isIncorrect = answered && selectedAnswer !== question.correct;
+
+  // Module completion screen
+  if (moduleCompleted) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="mb-8">
+            <div className="w-24 h-24 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Trophy className="w-12 h-12 text-success" />
+            </div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Module Complete!</h1>
+            <p className="text-muted-foreground">Congratulations on completing {module?.title}!</p>
+          </div>
+          
+          <div className="space-y-4 mb-8">
+            <div className="flex justify-between items-center p-4 bg-gradient-card rounded-lg">
+              <span className="text-muted-foreground">Points Earned</span>
+              <span className="font-bold text-primary">+{points + 25}</span>
+            </div>
+            <div className="flex justify-between items-center p-4 bg-gradient-card rounded-lg">
+              <span className="text-muted-foreground">Correct Answers</span>
+              <span className="font-bold text-success">{correctAnswers}/{module?.questions.length}</span>
+            </div>
+            <div className="flex justify-between items-center p-4 bg-gradient-card rounded-lg">
+              <span className="text-muted-foreground">New Total Points</span>
+              <span className="font-bold text-cta">{currentTotalPoints + (points + 25 - currentModuleProgress)}</span>
+            </div>
+          </div>
+
+          <div className="text-sm text-muted-foreground">
+            <p>Your progress has been saved!</p>
+            <p>Returning to modules in a moment...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -265,12 +381,20 @@ const Module = () => {
                   <span className="font-medium">{points}/100</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Questions Left</span>
-                  <span className="font-medium">{(module?.questions.length || 0) - currentQuestion - 1}</span>
+                  <span className="text-sm text-muted-foreground">Total Points</span>
+                  <span className="font-medium">{currentTotalPoints + (points - currentModuleProgress)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Correct Answers</span>
+                  <span className="font-medium">{correctAnswers}/{currentQuestion + 1}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Completion</span>
                   <span className="font-medium">{Math.round(progress)}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Credit Score</span>
+                  <span className="font-medium">{Math.min(850, Math.max(300, 300 + ((currentTotalPoints + (points - currentModuleProgress)) * 2)))}</span>
                 </div>
               </CardContent>
             </Card>

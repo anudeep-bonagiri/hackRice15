@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./db.js";
 import goalRoutes from "./routes/goalRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import Goal from "./models/Goal.js";
 
 // Load environment variables
@@ -61,6 +62,7 @@ app.get("/health", (req, res) => {
 
 // Protected routes (Auth0 required)
 app.use("/api/goals", goalRoutes);
+app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

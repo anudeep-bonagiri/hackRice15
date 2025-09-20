@@ -2,21 +2,52 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ModuleCard } from '@/components/ModuleCard';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calculator, Shield, PiggyBank, TrendingUp, CreditCard, Crown } from 'lucide-react';
+import { useUser } from '@/hooks/useUser';
+import { ArrowLeft, Calculator, Shield, PiggyBank, TrendingUp, CreditCard, Crown, Loader2 } from 'lucide-react';
 
 const Modules = () => {
   const navigate = useNavigate();
-  const [userProgress] = useState({
-    totalPoints: 150,
+  const { user, loading, error } = useUser();
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading your modules...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state only if there's a real error (not handled gracefully)
+  if (error && !user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error loading your modules: {error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Use user data or fallback to zero values for new users
+  const userProgress = user ? {
+    totalPoints: user.totalPoints,
+    moduleProgress: user.moduleProgress
+  } : {
+    totalPoints: 0,
     moduleProgress: {
-      1: 100, // Budget Boss - completed
-      2: 50,  // Debt Destroyer - in progress
-      3: 0,   // Emergency Fund Fortress
-      4: 0,   // Investment Explorer
-      5: 0,   // Credit Champion
-      6: 0    // Wealth Builder Pro
+      1: 0, // Budget Boss
+      2: 0, // Debt Destroyer
+      3: 0, // Emergency Fund Fortress
+      4: 0, // Investment Explorer
+      5: 0, // Credit Champion
+      6: 0  // Wealth Builder Pro
     }
-  });
+  };
 
   const modules = [
     {
@@ -33,7 +64,7 @@ const Modules = () => {
       description: "Learn about different debt types, payoff strategies, and credit management to eliminate debt effectively.",
       icon: <Shield className="w-5 h-5" />,
       maxPoints: 100,
-      isUnlocked: userProgress.moduleProgress[1] >= 80
+      isUnlocked: userProgress.moduleProgress[1] >= 100
     },
     {
       id: 3,
@@ -41,7 +72,7 @@ const Modules = () => {
       description: "Build your financial safety net with smart savings strategies and emergency scenario planning.",
       icon: <PiggyBank className="w-5 h-5" />,
       maxPoints: 100,
-      isUnlocked: userProgress.moduleProgress[2] >= 80
+      isUnlocked: userProgress.moduleProgress[2] >= 100
     },
     {
       id: 4,
@@ -49,7 +80,7 @@ const Modules = () => {
       description: "Discover investing basics, portfolio building, and risk management for long-term wealth growth.",
       icon: <TrendingUp className="w-5 h-5" />,
       maxPoints: 100,
-      isUnlocked: userProgress.moduleProgress[3] >= 80
+      isUnlocked: userProgress.moduleProgress[3] >= 100
     },
     {
       id: 5,
@@ -57,7 +88,7 @@ const Modules = () => {
       description: "Understand credit scores, responsible credit use, and strategic loan planning for financial success.",
       icon: <CreditCard className="w-5 h-5" />,
       maxPoints: 100,
-      isUnlocked: userProgress.moduleProgress[4] >= 80
+      isUnlocked: userProgress.moduleProgress[4] >= 100
     },
     {
       id: 6,
@@ -65,7 +96,7 @@ const Modules = () => {
       description: "Advanced investment strategies, tax planning, and estate basics for comprehensive wealth building.",
       icon: <Crown className="w-5 h-5" />,
       maxPoints: 100,
-      isUnlocked: userProgress.moduleProgress[5] >= 80
+      isUnlocked: userProgress.moduleProgress[5] >= 100
     }
   ];
 
