@@ -82,7 +82,6 @@ git log --oneline -5
 
 ### Notable Challenges (choose multiple):
 - **MongoDB Atlas**: M5GO IoT Starter Kit
-- **Auth0**: Wireless headphones  
 - **Gemini API**: Google swag
 - **Cloudflare AI**: Arduino kit
 - **Capital One Financial**: $250 Amazon gift cards
@@ -99,7 +98,6 @@ When implementing your project, consider these hackathon-optimized patterns:
 
 ### Technology Integration
 - If using MongoDB Atlas: Set up with $50 student credit or free tier
-- If using Auth0: Implement social sign-in, MFA, or passwordless login
 - If using Gemini API: Focus on language understanding, data analysis, or content generation
 - If using Cloudflare: Leverage Workers AI, C3, or object storage
 

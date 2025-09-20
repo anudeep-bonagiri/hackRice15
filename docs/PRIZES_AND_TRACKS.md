@@ -34,11 +34,6 @@
 - **Details**: Use MongoDB Atlas with $50 student credit or free tier
 - **Resources**: MongoDB University
 
-### Best Use of Auth0
-- **Prize**: Wireless Headphones
-- **Details**: Implement Auth0 APIs for authentication features
-- **Features**: Social sign-in, MFA, passwordless login
-
 ### Best Use of Gemini API
 - **Prize**: Google Swag
 - **Focus**: AI-powered applications using Google Gemini

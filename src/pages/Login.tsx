@@ -13,15 +13,13 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // This is where Auth0 integration would be implemented
-  const handleAuth0Login = () => {
-    // Auth0 login logic would go here
+  // Simple login handlers
+  const handleLogin = () => {
     // For demo purposes, navigate directly to dashboard
     navigate('/dashboard');
   };
 
-  const handleAuth0Signup = () => {
-    // Auth0 signup logic would go here
+  const handleSignup = () => {
     // For demo purposes, navigate directly to dashboard
     navigate('/dashboard');
   };
@@ -81,15 +79,15 @@ const Login = () => {
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {/* Auth0 Integration Buttons */}
+            {/* Quick Login Buttons */}
             <div className="space-y-3">
               <Button 
-                onClick={isLogin ? handleAuth0Login : handleAuth0Signup}
+                onClick={isLogin ? handleLogin : handleSignup}
                 className="w-full btn-primary text-lg py-3"
                 size="lg"
               >
                 <Shield className="w-5 h-5 mr-2" />
-                {isLogin ? 'Sign In with Auth0' : 'Sign Up with Auth0'}
+                {isLogin ? 'Quick Sign In' : 'Quick Sign Up'}
               </Button>
               
               <div className="relative">

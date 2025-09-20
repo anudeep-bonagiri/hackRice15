@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const progressSchema = new mongoose.Schema({
-  userId: { type: String, required: true }, // Auth0 user ID (string format)
+  userId: { type: String, required: true }, // User ID
   lessonId: String,
   completed: { type: Boolean, default: false },
   score: Number,

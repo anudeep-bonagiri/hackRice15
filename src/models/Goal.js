@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const goalSchema = new mongoose.Schema({
-  userId: { type: String, required: true }, // Auth0 user ID (string format)
+  userId: { type: String, required: true }, // User ID
   title: String,
   targetAmount: Number,
   currentAmount: { type: Number, default: 0 },
