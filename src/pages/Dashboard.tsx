@@ -205,6 +205,7 @@ const Dashboard = () => {
                   Monitor your credit score and get improvement tips.
                 </p>
                 <Button 
+                  onClick={() => navigate('/credit-report')}
                   className="w-full bg-success hover:bg-success/90 text-success-foreground"
                 >
                   View Credit Report
