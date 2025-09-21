@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ProgressBar';
 import GrowFiLogo from '@/assets/GrowFi.png';
+import CelebrationVideo from '@/assets/Video_Generation_For_Celebration.mp4';
+import SadVideo from '@/assets/Sad_Crying_Character_Video_Generation.mp4';
+import SwimmingVideo from '@/assets/Video_Generation_Of_Swimming_Image.mp4';
 import { useUser } from '@/hooks/useUser';
 import { ArrowLeft, CheckCircle, XCircle, MessageCircle, Lightbulb, Trophy, Star } from 'lucide-react';
 
@@ -309,6 +312,25 @@ const Module = () => {
 
   const isCorrect = selectedAnswer === question.correct;
   const isIncorrect = answered && selectedAnswer !== question.correct;
+  const videoSrc = answered ? (isCorrect ? CelebrationVideo : SadVideo) : SwimmingVideo;
+  const videoLoop = !answered;
+
+  // Ensure autoplay reliably starts on all browsers after selection
+  const feedbackVideoRef = useRef<HTMLVideoElement | null>(null);
+  useEffect(() => {
+    if (videoSrc && feedbackVideoRef.current) {
+      try {
+        feedbackVideoRef.current.muted = true;
+        feedbackVideoRef.current.currentTime = 0;
+        const p = feedbackVideoRef.current.play();
+        if (p && typeof p.then === 'function') {
+          p.catch(() => {/* ignore autoplay rejection */});
+        }
+      } catch (_) {
+        // no-op
+      }
+    }
+  }, [videoSrc]);
 
   // Module completion screen
   if (moduleCompleted) {
@@ -396,70 +418,108 @@ const Module = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Question Section */}
           <div className="lg:col-span-2">
-            <Card className="bg-gradient-card">
-              <CardHeader>
-                <CardTitle className="text-xl text-foreground">
-                  {question.question}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {question.options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={answered}
-                    className={`
-                      w-full p-4 text-left rounded-lg border-2 transition-all duration-300
-                      ${!answered 
-                        ? 'border-border hover:border-primary hover:bg-primary/5' 
-                        : index === question.correct
-                          ? 'border-success bg-success/10 text-success'
-                          : selectedAnswer === index
-                            ? 'border-destructive bg-destructive/10 text-destructive'
-                            : 'border-muted bg-muted/50 text-muted-foreground'
-                      }
-                    `}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span>{option}</span>
-                      {answered && (
-                        <div>
-                          {index === question.correct && <CheckCircle className="w-5 h-5 text-success" />}
-                          {selectedAnswer === index && index !== question.correct && <XCircle className="w-5 h-5 text-destructive" />}
+            <div className="relative">
+              {/* Desktop: outside to the left */}
+              <div className="hidden md:block absolute -left-24 top-2 z-10">
+                <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-muted bg-background shadow">
+                  <video
+                    key={`${String(videoSrc)}-${answered ? 'answered' : 'idle'}`}
+                    ref={feedbackVideoRef}
+                    src={videoSrc}
+                    autoPlay
+                    muted
+                    playsInline
+                    preload="auto"
+                    loop={videoLoop}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile: above the card */}
+              <div className="md:hidden mb-4">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-muted bg-background shadow">
+                  <video
+                    key={`${String(videoSrc)}-${answered ? 'answered' : 'idle'}`}
+                    ref={feedbackVideoRef}
+                    src={videoSrc}
+                    autoPlay
+                    muted
+                    playsInline
+                    preload="auto"
+                    loop={videoLoop}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              <Card className="bg-gradient-card">
+                <CardHeader>
+                  <CardTitle className="text-xl text-foreground">
+                    {question.question}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                <div className="space-y-3">
+                    {question.options.map((option, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleAnswerSelect(index)}
+                        disabled={answered}
+                        className={`
+                          w-full p-4 text-left rounded-lg border-2 transition-all duration-300
+                          ${!answered 
+                            ? 'border-border hover:border-primary hover:bg-primary/5' 
+                            : index === question.correct
+                              ? 'border-success bg-success/10 text-success'
+                              : selectedAnswer === index
+                                ? 'border-destructive bg-destructive/10 text-destructive'
+                                : 'border-muted bg-muted/50 text-muted-foreground'
+                          }
+                        `}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>{option}</span>
+                          {answered && (
+                            <div>
+                              {index === question.correct && <CheckCircle className="w-5 h-5 text-success" />}
+                              {selectedAnswer === index && index !== question.correct && <XCircle className="w-5 h-5 text-destructive" />}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </button>
-                ))}
+                      </button>
+                    ))}
 
-                {answered && (
-                  <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-muted">
-                    <div className="flex items-start gap-3">
-                      <Lightbulb className="w-5 h-5 text-primary mt-0.5" />
-                      <div>
-                        <h4 className="font-medium text-foreground mb-1">Explanation</h4>
-                        <p className="text-sm text-muted-foreground">{question.explanation}</p>
+                    {answered && (
+                      <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-muted">
+                        <div className="flex items-start gap-3">
+                          <Lightbulb className="w-5 h-5 text-primary mt-0.5" />
+                          <div>
+                            <h4 className="font-medium text-foreground mb-1">Explanation</h4>
+                            <p className="text-sm text-muted-foreground">{question.explanation}</p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                )}
+                    )}
 
-                {answered && (
-                  <div className="flex justify-between items-center pt-4">
-                    <div className="text-sm text-muted-foreground">
-                      {isCorrect ? (
-                        <span className="text-success">✓ Correct! +50 points</span>
-                      ) : (
-                        <span className="text-destructive">✗ Incorrect, but you learned something new!</span>
-                      )}
-                    </div>
-                    <Button onClick={handleNext} className="btn-primary">
-                      {currentQuestion < (module?.questions.length || 0) - 1 ? 'Next Question' : 'Complete Module'}
-                    </Button>
-                  </div>
-                )}
+                    {answered && (
+                      <div className="flex justify-between items-center pt-4">
+                        <div className="text-sm text-muted-foreground">
+                          {isCorrect ? (
+                            <span className="text-success">✓ Correct! +50 points</span>
+                          ) : (
+                            <span className="text-destructive">✗ Incorrect, but you learned something new!</span>
+                          )}
+                        </div>
+                        <Button onClick={handleNext} className="btn-primary">
+                          {currentQuestion < (module?.questions.length || 0) - 1 ? 'Next Question' : 'Complete Module'}
+                        </Button>
+                      </div>
+                    )}
+                </div>
               </CardContent>
             </Card>
+            </div>
           </div>
 
           {/* AI Assistant Sidebar */}

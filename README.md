@@ -105,3 +105,13 @@ Immediate Features (Next 30 Days)
 •  Credit Score Integration: Connect to real credit monitoring services
 •  Advanced Gamification: Achievement trees, learning streaks, seasonal challenges
 •  AI Recommendations: Personalized learning paths based on user financial situation
+
+## Question Feedback Videos
+
+The circular video frame plays immediately after selecting an answer (muted, inline). Videos are imported from `src/assets`:
+- `src/assets/Video_Generation_For_Celebration.mp4` (correct answers)
+- `src/assets/Sad_Crying_Character_Video_Generation.mp4` (incorrect answers)
+
+Notes
+- Vite will bundle these as asset URLs; no extra config required.
+- Autoplay relies on `muted` and `playsInline`. If a browser still blocks playback, ensure the files are encoded with H.264 video and AAC audio.
