@@ -247,7 +247,7 @@ export const ChatBot: React.FC = () => {
               {/* Professional Footer */}
               <div className="px-4 py-2 bg-gray-50 border-t text-center">
                 <p className="text-xs text-gray-500">
-                  ⚡ Powered by <span className="font-semibold text-blue-600">Google Gemini</span> • 🌱 Built for <span className="font-semibold text-green-600">HackRice 2024</span>
+                  ⚡ Powered by <span className="font-semibold text-blue-600">Google Gemini</span> • 🌱 Built for <span className="font-semibold text-green-600">HackRice 2025</span>
                 </p>
               </div>
             </div>
