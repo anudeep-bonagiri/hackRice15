@@ -14,6 +14,7 @@ import FaceVerification from "./pages/FaceVerification";
 import MiniGame from "./pages/MiniGame";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ChatBot from "./components/ChatBot";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,9 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        
+        {/* Global AI Assistant - Available on all pages */}
+        <ChatBot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
