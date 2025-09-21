@@ -11,6 +11,7 @@ import Modules from "./pages/Modules";
 import Module from "./pages/Module";
 import CreditReport from "./pages/CreditReport";
 import FaceVerification from "./pages/FaceVerification";
+import MiniGame from "./pages/MiniGame";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -45,6 +46,11 @@ const App = () => (
           <Route path="/credit-report" element={
             <ProtectedRoute requireVerification={true}>
               <CreditReport />
+            </ProtectedRoute>
+          } />
+          <Route path="/mini-game" element={
+            <ProtectedRoute requireVerification={true}>
+              <MiniGame />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
