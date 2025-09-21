@@ -72,7 +72,7 @@ const Dashboard = () => {
       answer:
         "Use GrowFi to understand debt payoff strategies like the snowball or avalanche method. List your debts, prioritize high-interest ones, and automate payments if possible. Consider consolidating if it lowers your interest rate, and avoid taking on new debt while paying off existing balances.",
     },
-        {
+    {
       question: "How can I build credit if I’ve never had a loan or credit card before?",
       answer:
         "Start by completing GrowFi’s modules to learn the basics of credit. In real life, you can apply for a secured credit card, use it responsibly, and pay it off on time. Over time, your responsible usage will help establish your credit history and raise your credit score.",
@@ -87,32 +87,31 @@ const Dashboard = () => {
       answer:
         "Use GrowFi to practice budgeting and track expenses. Aim to save a small portion of your income regularly. In real life, open a savings account, set an automatic transfer each payday, and build a history of consistent savings. Over time, this helps with both deposits and demonstrating financial responsibility to landlords or banks.",
     },
-        {
+    {
       question: "After I finish GrowFi, how do I know which bank to pick?",
       answer:
         "Once you complete GrowFi and build your credit, look for banks or credit unions that offer low fees, fair interest rates, and beginner-friendly accounts. Compare options online, check for hidden charges, and see if they report to credit bureaus to help you continue growing your credit. Local credit unions can be a great choice for lower-income individuals starting out.",
     },
     {
-  question: "What’s the best way to prepare for financial emergencies?",
-  answer:
-    "Use GrowFi to learn budgeting and set aside a small amount each month. In real life, start with an emergency fund of $500–$1,000 in a savings account. Over time, aim for 3–6 months of expenses. Having this cushion can keep you from falling into debt when unexpected costs come up.",
-  },
-  {
-  question: "How can I use credit cards without getting into trouble?",
-  answer:
-    "GrowFi helps you understand responsible credit use. In practice, always pay your balance in full if possible, keep your usage under 30% of your limit, and avoid late payments. Used wisely, credit cards can build your score and give you rewards without leading to debt.",
-  },
-  {
-  question: "When should I start saving for retirement?",
-  answer:
-    "It’s never too early to start. After completing GrowFi’s modules on budgeting and saving, consider opening an IRA or contributing to a workplace retirement plan. Even small amounts invested early can grow significantly thanks to compound interest.",
-},
-{
-  question: "How do I know if a loan offer is fair?",
-  answer:
-    "GrowFi can teach you how to compare interest rates and fees. In real life, look at the APR, not just the monthly payment. Be cautious of hidden fees, very high rates, or lenders that don’t explain terms clearly. If in doubt, compare at least 2–3 offers before signing.",
-},
-  
+      question: "What’s the best way to prepare for financial emergencies?",
+      answer:
+        "Use GrowFi to learn budgeting and set aside a small amount each month. In real life, start with an emergency fund of $500–$1,000 in a savings account. Over time, aim for 3–6 months of expenses. Having this cushion can keep you from falling into debt when unexpected costs come up.",
+    },
+    {
+      question: "How can I use credit cards without getting into trouble?",
+      answer:
+        "GrowFi helps you understand responsible credit use. In practice, always pay your balance in full if possible, keep your usage under 30% of your limit, and avoid late payments. Used wisely, credit cards can build your score and give you rewards without leading to debt.",
+    },
+    {
+      question: "When should I start saving for retirement?",
+      answer:
+        "It’s never too early to start. After completing GrowFi’s modules on budgeting and saving, consider opening an IRA or contributing to a workplace retirement plan. Even small amounts invested early can grow significantly thanks to compound interest.",
+    },
+    {
+      question: "How do I know if a loan offer is fair?",
+      answer:
+        "GrowFi can teach you how to compare interest rates and fees. In real life, look at the APR, not just the monthly payment. Be cautious of hidden fees, very high rates, or lenders that don’t explain terms clearly. If in doubt, compare at least 2–3 offers before signing.",
+    },
   ];
 
   return (
