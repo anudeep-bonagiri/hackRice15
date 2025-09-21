@@ -11,8 +11,8 @@ const FaceVerification = () => {
   const handleVerificationSuccess = (userData: any) => {
     console.log('✅ Verification successful in parent:', userData);
     
-    // Store demo mode flag
-    localStorage.setItem('growfi-demo-mode', 'true');
+    // Clear demo mode flag - face verification is for real users
+    localStorage.removeItem('growfi-demo-mode');
     
     // Get existing user data or create new demo user
     const existingUser = localStorage.getItem('growfi-user');
@@ -32,22 +32,20 @@ const FaceVerification = () => {
         }
       };
     } else {
-      // Create new demo user with verification
+      // Create new verified user (not demo user) with face verification
       updatedUser = {
         id: 'face-verified-user',
-        username: 'verified',
+        username: userData.username || 'verified',
         name: userData.name || 'Verified User',
         email: userData.email || 'user@growfi.com',
-        totalPoints: 150,
-        completedModules: 1,
-        currentLevel: 2,
-        creditScore: 720,
-        achievements: 3,
-        streak: 5,
+        totalPoints: 0,
+        completedModules: 0,
+        currentLevel: 1,
+        creditScore: 650,
+        achievements: 0,
+        streak: 0,
         moduleProgress: {
-          1: 100, // Budget Boss - completed
-          2: 50,  // Debt Destroyer - in progress
-          3: 0, 4: 0, 5: 0, 6: 0
+          1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
         },
         preferences: {
           notifications: true,
