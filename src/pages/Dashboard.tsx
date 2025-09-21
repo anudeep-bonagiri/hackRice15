@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mascot } from '@/components/Mascot';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreCard } from '@/components/ScoreCard';
 import { AchievementSystem } from '@/components/AchievementSystem';
@@ -67,11 +67,6 @@ const Dashboard = () => {
               <h1 className="text-3xl font-bold">Welcome back to GrowFi!</h1>
               <p className="text-primary-foreground/80 mt-1">Keep growing your financial knowledge</p>
             </div>
-            <Mascot 
-              level={userProgress.currentLevel} 
-              points={userProgress.totalPoints}
-              size="lg"
-            />
           </div>
         </div>
       </header>
@@ -111,7 +106,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <ScoreCard
               type="progress"
-              value={`${userProgress.totalPoints}/600`}
+              value={`${userProgress.totalPoints}/675`}
               label="Total Points"
               subtitle={userProgress.totalPoints >= 400 ? "Graduation Ready!" : `${400 - userProgress.totalPoints} points to graduate`}
               trend={userProgress.totalPoints >= 400 ? 'up' : 'neutral'}
@@ -152,9 +147,9 @@ const Dashboard = () => {
             <CardContent className="space-y-4">
               <ProgressBar
                 current={userProgress.totalPoints}
-                max={600}
+                max={675}
                 label="Overall Progress"
-                variant="success"
+                variant="cyan"
                 size="lg"
               />
               <div className="flex justify-between items-center text-sm">
@@ -206,6 +201,7 @@ const Dashboard = () => {
                   Monitor your credit score and get improvement tips.
                 </p>
                 <Button 
+                  onClick={() => navigate('/credit-report')}
                   className="w-full bg-success hover:bg-success/90 text-success-foreground"
                 >
                   View Credit Report

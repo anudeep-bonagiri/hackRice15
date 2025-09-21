@@ -3,7 +3,7 @@ interface ProgressBarProps {
   max: number;
   label?: string;
   showPercentage?: boolean;
-  variant?: 'default' | 'success' | 'achievement';
+  variant?: 'default' | 'success' | 'achievement' | 'cyan';
   size?: 'sm' | 'md' | 'lg';
 }
 
@@ -20,7 +20,8 @@ export const ProgressBar = ({
   const variantClasses = {
     default: 'bg-primary',
     success: 'bg-success',
-    achievement: 'bg-achievement'
+    achievement: 'bg-achievement',
+    cyan: 'bg-cyan-500'
   };
   
   const sizeClasses = {

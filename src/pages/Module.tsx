@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ProgressBar';
-import { Mascot } from '@/components/Mascot';
+import GrowFiLogo from '@/assets/GrowFi.png';
 import { useUser } from '@/hooks/useUser';
 import { ArrowLeft, CheckCircle, XCircle, MessageCircle, Lightbulb, Trophy, Star } from 'lucide-react';
 
@@ -15,7 +15,6 @@ const Module = () => {
   const [points, setPoints] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
-  const [showMascotAnimation, setShowMascotAnimation] = useState(false);
   const [moduleCompleted, setModuleCompleted] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
 
@@ -29,7 +28,7 @@ const Module = () => {
           question: "What is the 50/30/20 budget rule?",
           options: [
             "50% needs, 30% wants, 20% savings",
-            "50% savings, 30% needs, 20% wants", 
+            "50% savings, 30% needs, 20% wants",
             "50% wants, 30% savings, 20% needs",
             "50% debt, 30% needs, 20% wants"
           ],
@@ -68,7 +67,7 @@ const Module = () => {
           question: "What's a good debt-to-income ratio?",
           options: [
             "Below 15%",
-            "Below 25%", 
+            "Below 25%",
             "Below 36%",
             "Below 50%"
           ],
@@ -76,8 +75,121 @@ const Module = () => {
           explanation: "A debt-to-income ratio below 36% is generally considered healthy, with housing costs ideally below 28%."
         }
       ]
+    },
+    3: {
+      title: "Emergency Fund Fortress",
+      description: "Build and protect your safety net",
+      questions: [
+        {
+          question: "How many months of expenses should an emergency fund cover?",
+          options: [
+            "1 month",
+            "3 to 6 months",
+            "9 to 12 months",
+            "12 to 24 months"
+          ],
+          correct: 1,
+          explanation: "Financial experts recommend 3 to 6 months of living expenses to handle unexpected events like job loss or medical bills."
+        },
+        {
+          question: "What's the best place to keep an emergency fund?",
+          options: [
+            "Checking account",
+            "High-yield savings account",
+            "Stocks",
+            "Retirement account"
+          ],
+          correct: 1,
+          explanation: "A high-yield savings account provides accessibility, safety, and some interest growth, making it ideal for emergencies."
+        }
+      ]
+    },
+    4: {
+      title: "Investment Explorer",
+      description: "Learn the basics of investing and portfolio building",
+      questions: [
+        {
+          question: "What does diversification mean in investing?",
+          options: [
+            "Investing in one type of asset only",
+            "Spreading investments across different assets",
+            "Investing all money into savings accounts",
+            "Avoiding risky investments"
+          ],
+          correct: 1,
+          explanation: "Diversification means spreading investments across asset classes to reduce overall risk."
+        },
+        {
+          question: "Which investment generally carries the lowest risk?",
+          options: [
+            "Stocks",
+            "Bonds",
+            "Real estate",
+            "Savings accounts"
+          ],
+          correct: 3,
+          explanation: "Savings accounts carry very low risk but also low returns, while stocks and real estate carry higher risks and returns."
+        }
+      ]
+    },
+    5: {
+      title: "Credit Champion",
+      description: "Master credit scores and responsible borrowing",
+      questions: [
+        {
+          question: "Which factor has the biggest impact on your credit score?",
+          options: [
+            "Payment history",
+            "Credit mix",
+            "Length of credit history",
+            "New credit inquiries"
+          ],
+          correct: 0,
+          explanation: "Payment history makes up about 35% of your credit score, making it the most important factor."
+        },
+        {
+          question: "What’s a good credit score range?",
+          options: [
+            "300-499",
+            "500-649",
+            "650-719",
+            "720-850"
+          ],
+          correct: 3,
+          explanation: "A score of 720 or higher is generally considered excellent, giving you access to the best rates and loan terms."
+        }
+      ]
+    },
+    6: {
+      title: "Wealth Builder Pro",
+      description: "Take your wealth to the next level with advanced strategies",
+      questions: [
+        {
+          question: "What is tax-loss harvesting?",
+          options: [
+            "Avoiding taxes by not selling investments",
+            "Selling investments at a loss to offset capital gains",
+            "Moving money to tax-free accounts",
+            "Donating assets to reduce taxable income"
+          ],
+          correct: 1,
+          explanation: "Tax-loss harvesting reduces tax liability by selling losing investments to offset gains from winners."
+        },
+        {
+          question: "Why is estate planning important?",
+          options: [
+            "It avoids all taxes",
+            "It ensures assets are distributed according to your wishes",
+            "It increases investment returns",
+            "It eliminates debt automatically"
+          ],
+          correct: 1,
+          explanation: "Estate planning ensures your assets are transferred smoothly and according to your wishes, while minimizing taxes and disputes."
+        }
+      ]
     }
   };
+  
 
   const module = id ? moduleData[parseInt(id) as keyof typeof moduleData] : null;
   const question = module?.questions[currentQuestion];
@@ -120,8 +232,6 @@ const Module = () => {
       const newPoints = points + 50;
       setPoints(newPoints);
       setCorrectAnswers(correctAnswers + 1);
-      setShowMascotAnimation(true);
-      setTimeout(() => setShowMascotAnimation(false), 1000);
       
       // Update user progress immediately
       updateUserProgress(newPoints);
@@ -170,7 +280,7 @@ const Module = () => {
     const finalPoints = points + moduleCompletionBonus;
     
     const updatedModuleProgress = { ...user.moduleProgress };
-    updatedModuleProgress[moduleId] = 100; // Mark module as 100% complete
+    updatedModuleProgress[moduleId] = 75; // Mark module as 100% complete
 
     const newTotalPoints = currentTotalPoints + (finalPoints - currentModuleProgress);
     const newCompletedModules = (user.completedModules || 0) + 1;
@@ -263,10 +373,10 @@ const Module = () => {
                 <div className="text-lg font-bold">{points} pts</div>
                 <div className="text-xs text-primary-foreground/80">Current Score</div>
               </div>
-              <Mascot 
-                level={1} 
-                points={points}
-                isAnimating={showMascotAnimation}
+              <img 
+                src={GrowFiLogo} 
+                alt="GrowFi logo" 
+                className="w-16 h-16 object-contain"
               />
             </div>
           </div>
