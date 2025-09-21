@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Modules from "./pages/Modules";
 import Module from "./pages/Module";
 import CreditReport from "./pages/CreditReport";
+import FaceVerification from "./pages/FaceVerification";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/modules" element={<Modules />} />
           <Route path="/module/:id" element={<Module />} />
           <Route path="/credit-report" element={<CreditReport />} />
+          <Route path="/face-verify" element={<FaceVerification />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

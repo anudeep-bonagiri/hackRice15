@@ -292,13 +292,13 @@ const Landing = () => {
                 onClick={() => navigate("/login")}
                 className="rounded-full px-3.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink transition hover:bg-brand/10"
               >
-                I already have an account
+                Traditional Login
               </Button>
               <Button
-                onClick={() => navigate("/login")}
-                className="rounded-full bg-brand px-4 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-brand-dark shadow-soft transition hover:-translate-y-0.5 hover:bg-brand/90"
+                onClick={() => navigate("/face-verify")}
+                className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white shadow-soft transition hover:-translate-y-0.5 hover:from-blue-700 hover:to-purple-700"
               >
-                Get Started
+                Face Verify
               </Button>
             </div>
 
@@ -368,16 +368,16 @@ const Landing = () => {
                   }}
                   className="rounded-xl border-ink/10 px-5 py-3 text-base font-semibold text-ink"
                 >
-                  I already have an account
+                  Traditional Login
                 </Button>
                 <Button
                   onClick={() => {
-                    navigate("/login");
+                    navigate("/face-verify");
                     setMobileOpen(false);
                   }}
-                  className="rounded-xl bg-brand px-5 py-3 text-base font-semibold text-brand-dark shadow-soft"
+                  className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-3 text-base font-semibold text-white shadow-soft"
                 >
-                  Get Started
+                  Face Verify
                 </Button>
               </div>
             </motion.aside>
@@ -416,18 +416,19 @@ const Landing = () => {
 
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
-                onClick={() => navigate("/login")}
-                className="group w-full rounded-2xl bg-brand px-8 py-4 text-base font-semibold text-brand-dark shadow-soft transition hover:-translate-y-0.5 hover:bg-brand/90 sm:w-auto"
+                onClick={() => navigate("/face-verify")}
+                className="group w-full rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-4 text-base font-semibold text-white shadow-soft transition hover:-translate-y-0.5 sm:w-auto"
               >
-                Get Started
-                <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
+                <BadgeCheck className="h-5 w-5 mr-2" />
+                Start Face Verification
+                <ArrowRight className="h-5 w-5 ml-2 transition group-hover:translate-x-1" />
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => navigate("/login")}
                 className="w-full rounded-2xl border border-brand/20 bg-transparent px-8 py-4 text-base font-semibold text-ink transition hover:bg-brand/10 sm:w-auto"
               >
-                I already have an account
+                Traditional Login
               </Button>
             </div>
 
