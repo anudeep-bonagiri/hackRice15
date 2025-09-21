@@ -280,7 +280,7 @@ const Module = () => {
     const finalPoints = points + moduleCompletionBonus;
     
     const updatedModuleProgress = { ...user.moduleProgress };
-    updatedModuleProgress[moduleId] = 75; // Mark module as 100% complete
+    updatedModuleProgress[moduleId] = 100; // Mark module as 100% complete
 
     const newTotalPoints = currentTotalPoints + (finalPoints - currentModuleProgress);
     const newCompletedModules = (user.completedModules || 0) + 1;
