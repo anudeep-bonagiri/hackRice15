@@ -72,66 +72,76 @@ const PersonaFaceScanner: React.FC<PersonaFaceScannerProps> = ({ onSuccess }) =>
     try {
       const detections = await faceapi.detectAllFaces(
         video,
-        new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.5 })
+        new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.8 })
       ).withFaceLandmarks().withFaceDescriptors();
       
-      // Strict face validation
-      const validFace = detections.find(detection => {
-        const { score } = detection.detection;
-        const landmarks = detection.landmarks;
-        
-        // Lower threshold for easier detection
-        if (score < 0.6) return false;
-        
-        // Must have facial landmarks (indicates a real face)
-        if (!landmarks) return false;
-        
-        // Get face box dimensions
-        const box = detection.detection.box;
-        const faceArea = box.width * box.height;
-        const videoArea = video.videoWidth * video.videoHeight;
-        const faceRatio = faceArea / videoArea;
-        
-        // More lenient face size requirements
-        if (faceRatio < 0.03 || faceRatio > 0.8) return false;
-        
-        // Smaller minimum face size
-        if (box.width < 60 || box.height < 60) return false;
-        
-        // More lenient aspect ratio for human faces
-        const aspectRatio = box.width / box.height;
-        if (aspectRatio < 0.5 || aspectRatio > 2.0) return false;
-        
-        console.log('😊 Valid face detected!', {
-          score: score.toFixed(2),
-          faceRatio: (faceRatio * 100).toFixed(1) + '%',
-          aspectRatio: aspectRatio.toFixed(2)
-        });
-        
-        return true;
-      });
-      
-      const faceFound = !!validFace;
-      const objectFound = detections.length > 0;
-      
-      console.log('🔍 Detection results:', {
-        detections: detections.length,
-        faceFound,
-        objectFound,
-        willShowObject: objectFound && !faceFound
-      });
-      
-      setFaceDetected(faceFound);
-      setObjectDetected(objectFound && !faceFound);
-      
-      if (!faceFound && objectFound) {
-        console.log('😔 Object detected but not a clear face', {
-          detections: detections.length,
-          scores: detections.map(d => d.detection.score.toFixed(2))
-        });
+      // Reject multiple faces immediately for security
+      if (detections.length > 1) {
+        console.log('🚫 Multiple faces detected - security risk!');
+        setFaceDetected(false);
+        setObjectDetected(true); // Show as object to indicate problem
+        return false;
       }
       
-      return faceFound;
+      // Reject if no faces detected
+      if (detections.length === 0) {
+        setFaceDetected(false);
+        setObjectDetected(false);
+        return false;
+      }
+      
+      // Strict face validation for single face
+      const detection = detections[0];
+      const { score } = detection.detection;
+      const landmarks = detection.landmarks;
+      
+      // Raise threshold for higher security
+      if (score < 0.85) {
+        console.log('🚫 Face confidence too low:', score.toFixed(2));
+        return false;
+      }
+      
+      // Must have facial landmarks (indicates a real face)
+      if (!landmarks) {
+        console.log('🚫 No facial landmarks detected');
+        return false;
+      }
+      
+      // Get face box dimensions
+      const box = detection.detection.box;
+      const faceArea = box.width * box.height;
+      const videoArea = video.videoWidth * video.videoHeight;
+      const faceRatio = faceArea / videoArea;
+      
+      // Stricter face size requirements - face should be significant but not too large
+      if (faceRatio < 0.08 || faceRatio > 0.5) {
+        console.log('🚫 Face size invalid:', (faceRatio * 100).toFixed(1) + '%');
+        return false;
+      }
+      
+      // Larger minimum face size for better recognition
+      if (box.width < 120 || box.height < 120) {
+        console.log('🚫 Face too small:', box.width + 'x' + box.height);
+        return false;
+      }
+      
+      // Stricter aspect ratio for human faces
+      const aspectRatio = box.width / box.height;
+      if (aspectRatio < 0.7 || aspectRatio > 1.4) {
+        console.log('🚫 Invalid face aspect ratio:', aspectRatio.toFixed(2));
+        return false;
+      }
+      
+      console.log('✅ Valid single face detected!', {
+        score: score.toFixed(2),
+        faceRatio: (faceRatio * 100).toFixed(1) + '%',
+        aspectRatio: aspectRatio.toFixed(2),
+        size: box.width + 'x' + box.height
+      });
+      
+      setFaceDetected(true);
+      setObjectDetected(false);
+      return true;
     } catch (error) {
       console.error('Face detection error:', error);
       setFaceDetected(false);
@@ -301,32 +311,43 @@ const PersonaFaceScanner: React.FC<PersonaFaceScannerProps> = ({ onSuccess }) =>
         img.onload = resolve;
       });
 
-      // Run face detection on captured image - make it very lenient for demo
-      let faceVerified = true; // Always pass for demo purposes
+      // Run strict face detection on captured image
+      let faceVerified = false;
       if (modelsLoaded) {
         try {
           const detections = await faceapi.detectAllFaces(
             img,
-            new faceapi.TinyFaceDetectorOptions({ scoreThreshold: 0.3 })
+            new faceapi.TinyFaceDetectorOptions({ scoreThreshold: 0.8 })
           ).withFaceLandmarks();
           
-          // Very lenient validation - any detection passes
-          if (detections.length > 0) {
+          // Strict validation - exactly one high-quality face
+          if (detections.length === 1) {
             const detection = detections[0];
             const { score } = detection.detection;
-            console.log(`✅ Face found in image! Score: ${score.toFixed(2)}`);
-            faceVerified = true;
+            
+            if (score >= 0.85) {
+              console.log(`✅ High-quality face found in image! Score: ${score.toFixed(2)}`);
+              faceVerified = true;
+            } else {
+              console.log(`🚫 Face quality too low: ${score.toFixed(2)}`);
+              faceVerified = false;
+            }
+          } else if (detections.length > 1) {
+            console.log(`🚫 Multiple faces detected in image: ${detections.length}`);
+            faceVerified = false;
           } else {
-            console.log('⚠️ No face found in image, but passing anyway for demo');
-            faceVerified = true; // Still pass for demo
+            console.log('🚫 No face found in captured image');
+            faceVerified = false;
           }
           
-          console.log(`Face detection result: PASS (demo mode - always passes)`);
+          console.log(`Face verification result: ${faceVerified ? 'PASS' : 'FAIL'}`);
         } catch (error) {
           console.error('Face verification error:', error);
-          console.log('⚠️ Face detection failed, but passing anyway for demo');
-          faceVerified = true; // Still pass for demo
+          faceVerified = false;
         }
+      } else {
+        console.log('🚫 Models not loaded - verification failed');
+        faceVerified = false;
       }
       
       // Simulate AI processing time
@@ -334,8 +355,8 @@ const PersonaFaceScanner: React.FC<PersonaFaceScannerProps> = ({ onSuccess }) =>
       
       if (!faceVerified) {
         setScanStep('failed');
-        toast.error('😞 Face verification failed!', {
-          description: 'No clear face detected in the image. Please try again.'
+        toast.error('🚫 Security verification failed!', {
+          description: 'Please ensure only one person with a clearly visible face is in the frame.'
         });
         setIsVerifying(false);
         setTimeout(() => {
@@ -429,10 +450,11 @@ const PersonaFaceScanner: React.FC<PersonaFaceScannerProps> = ({ onSuccess }) =>
                   <div className="text-sm text-blue-800">
                     <p className="font-medium">What to expect:</p>
                     <ul className="list-disc list-inside mt-2 space-y-1 text-blue-700">
-                      <li>Position your face in the camera frame</li>
-                      <li>Photo will be captured automatically</li>
-                      <li>AI will verify your identity</li>
-                      <li>Access granted to your financial dashboard</li>
+                      <li>Ensure you are the ONLY person in the frame</li>
+                      <li>Position your face clearly and close to camera</li>
+                      <li>Remove sunglasses, hats, or face coverings</li>
+                      <li>Photo will be captured automatically when valid</li>
+                      <li>High-security AI will verify your identity</li>
                     </ul>
                   </div>
                 </div>
@@ -494,19 +516,19 @@ const PersonaFaceScanner: React.FC<PersonaFaceScannerProps> = ({ onSuccess }) =>
                 <Loader2 className="w-5 h-5 animate-spin" />
                 <span className="font-medium">
                   {faceDetected 
-                    ? 'Face detected! Capturing soon...' 
+                    ? 'Single face detected! Capturing soon...' 
                     : objectDetected 
-                    ? 'Object detected - please show your face clearly'
+                    ? 'Multiple people or objects detected - ensure only you are in frame'
                     : 'Position your face clearly in the frame...'
                   }
                 </span>
               </div>
               <p className="text-sm text-gray-500">
                 {faceDetected 
-                  ? 'Stay still for capture' 
+                  ? 'Stay still - capturing in 2 seconds' 
                   : objectDetected 
-                  ? 'Need a clear human face to proceed'
-                  : 'Looking for a clear face...'
+                  ? 'Security: Only ONE person allowed in frame'
+                  : 'Scanning for a single, clear face...'
                 }
               </p>
             </div>
@@ -594,12 +616,16 @@ const PersonaFaceScanner: React.FC<PersonaFaceScannerProps> = ({ onSuccess }) =>
               </div>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-red-800 mb-2">Verification Failed</h3>
-              <p className="text-red-600 mb-4">No clear face detected in the image.</p>
+              <h3 className="text-2xl font-bold text-red-800 mb-2">Security Check Failed</h3>
+              <p className="text-red-600 mb-4">Face verification requirements not met.</p>
               <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-sm text-red-800">
-                  Please position your face clearly in the camera frame and try again.
-                </p>
+                <p className="text-sm text-red-800 font-medium mb-2">Requirements:</p>
+                <ul className="text-sm text-red-800 list-disc list-inside space-y-1">
+                  <li>Only ONE person in the camera frame</li>
+                  <li>Face clearly visible and well-lit</li>
+                  <li>No hands, objects, or coverings blocking face</li>
+                  <li>Look directly at the camera</li>
+                </ul>
               </div>
             </div>
           </div>
