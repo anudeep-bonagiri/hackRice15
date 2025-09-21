@@ -42,53 +42,38 @@ const PersonaVerification: React.FC<PersonaVerificationProps> = ({
     try {
       setIsLoading(true);
       
-      // Demo: Simulate Persona verification process
+      // Demo: Simulate Persona verification process (frontend-only)
       console.log('🚀 Starting demo Persona verification for:', username);
       
       // Simulate verification delay
-      setTimeout(async () => {
+      setTimeout(() => {
         try {
           const mockInquiryId = `inq_demo_${Date.now()}`;
           
-          // Call our API to update verification status
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/verification/update`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              username: username,
-              type: 'identity',
-              status: true,
-              personaInquiryId: mockInquiryId,
-              verificationData: {
-                status: 'completed',
-                fields: { name: username },
-                completedAt: new Date().toISOString()
-              }
-            }),
+          // Frontend-only demo: simulate successful verification
+          console.log('✅ Demo verification completed:', mockInquiryId);
+          
+          // Simulate microcredit score increase
+          const mockMicrocreditScore = 75; // Demo score
+          
+          toast.success('🎉 Demo: Identity verification completed!', {
+            description: `Your microcredit eligibility increased! Demo mode active.`
           });
-
-          if (response.ok) {
-            const result = await response.json();
-            toast.success('Demo: Identity verification completed!', {
-              description: `Your microcredit score increased to ${result.microcreditScore} points!`
-            });
-            onVerificationComplete(mockInquiryId);
-          } else {
-            throw new Error('Failed to update verification status');
-          }
+          
+          // Complete the verification
+          onVerificationComplete(mockInquiryId);
+          
         } catch (error) {
-          console.error('❌ Error updating verification:', error);
-          toast.error('Demo verification failed');
+          console.error('❌ Error in demo verification:', error);
+          toast.error('Demo verification simulation failed');
         } finally {
           setIsLoading(false);
         }
       }, 2000); // 2 second demo delay
       
     } catch (error) {
-      console.error('❌ Error in demo verification:', error);
-      toast.error('Failed to start verification');
+      console.error('❌ Error starting demo verification:', error);
+      toast.error('Failed to start verification demo');
       setIsLoading(false);
     }
   };
@@ -159,14 +144,19 @@ const PersonaVerification: React.FC<PersonaVerificationProps> = ({
           ) : (
             <>
               <Shield className="w-4 h-4 mr-2" />
-              Demo: Verify Identity Now
+              📹 Demo: Verify Identity (Simulated)
             </>
           )}
         </Button>
         
-        <p className="text-xs text-gray-600 text-center">
-          Takes 2-3 minutes • Government ID required
-        </p>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+          <p className="text-xs text-yellow-800 text-center font-medium">
+            🎭 DEMO MODE: This simulates identity verification for demonstration purposes only.
+          </p>
+          <p className="text-xs text-yellow-700 text-center mt-1">
+            In production: Takes 2-3 minutes • Government ID required
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
