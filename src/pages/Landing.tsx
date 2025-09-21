@@ -8,6 +8,7 @@ import {
   type MotionProps,
   motion,
   useReducedMotion,
+  easeInOut,
 } from "framer-motion";
 import {
   Menu,
@@ -160,6 +161,24 @@ const faqItems: FAQItem[] = [
   },
 ];
 
+const qaItems: FAQItem[] = [
+  {
+    question: "If I want to buy a house, how can I progress from this to owning a house?",
+    answer:
+      "Continue through this course to build your credit, understand budgeting, and save for a down payment. In real life, start by checking your credit score, researching mortgage options, and comparing banks for the best rates. Once ready, get pre-approved, find a trusted real estate agent, and make sure to budget for closing costs and ongoing expenses.",
+  },
+  {
+    question: "How do I start investing for the first time?",
+    answer:
+      "Learn the basics in GrowFi, then open a brokerage account with a reputable provider. Start with index funds or ETFs, invest regularly, and avoid trying to time the market. Always research fees and consider speaking with a financial advisor for personalized advice.",
+  },
+  {
+    question: "What steps should I take to pay off debt efficiently?",
+    answer:
+      "Use GrowFi to understand debt payoff strategies like the snowball or avalanche method. List your debts, prioritize high-interest ones, and automate payments if possible. Consider consolidating if it lowers your interest rate, and avoid taking on new debt while paying off existing balances.",
+  },
+];
+
 const StoreButton = ({
   label,
   caption,
@@ -245,7 +264,7 @@ const Landing = () => {
         transition: {
           duration: 6,
           repeat: Infinity,
-          ease: "easeInOut",
+          ease: easeInOut, // use imported function
         },
       };
 
