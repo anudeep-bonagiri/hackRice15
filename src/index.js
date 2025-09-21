@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./db.js";
 import goalRoutes from "./routes/goalRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
 import Goal from "./models/Goal.js";
 
 // Load environment variables
@@ -70,6 +71,7 @@ app.get("/health", (req, res) => {
 // API routes
 app.use("/api/goals", goalRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/chat", chatRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
