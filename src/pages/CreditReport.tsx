@@ -57,7 +57,13 @@ const CreditReport = () => {
     }
   };
 
-  const microcreditAmount = Math.min(Math.pow(userProgress.totalPoints / 10, 1.8) * 10, 7000);
+  // Simpler, more intuitive microcredit calculation
+  const microcreditAmount = (() => {
+    if (userProgress.totalPoints < 100) return 0;
+    if (userProgress.totalPoints < 200) return Math.min(userProgress.totalPoints * 10, 1500);  // $1000-$1500
+    if (userProgress.totalPoints < 400) return Math.min(userProgress.totalPoints * 12, 4000);  // $2400-$4000
+    return Math.min(userProgress.totalPoints * 15, 7000); // Up to $7000 for 400+ points
+  })();
   const pointsToMicrocredit = Math.max(100 - userProgress.totalPoints, 0);
   const pointsToGraduation = Math.max(400 - userProgress.totalPoints, 0);
 

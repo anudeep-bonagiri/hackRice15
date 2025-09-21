@@ -9,8 +9,80 @@ const FaceVerification = () => {
   const navigate = useNavigate();
 
   const handleVerificationSuccess = (userData: any) => {
-    console.log('✅ Verification successful:', userData);
-    // Additional success handling can go here
+    console.log('✅ Verification successful in parent:', userData);
+    
+    // Store demo mode flag
+    localStorage.setItem('growfi-demo-mode', 'true');
+    
+    // Get existing user data or create new demo user
+    const existingUser = localStorage.getItem('growfi-user');
+    let updatedUser;
+    
+    if (existingUser) {
+      // Update existing user with verification status
+      const parsed = JSON.parse(existingUser);
+      updatedUser = {
+        ...parsed,
+        name: userData.name || 'Verified User',
+        verified: true,
+        faceVerification: {
+          verified: true,
+          timestamp: userData.timestamp,
+          confidence: userData.confidence || 0.95
+        }
+      };
+    } else {
+      // Create new demo user with verification
+      updatedUser = {
+        id: 'face-verified-user',
+        username: 'verified',
+        name: userData.name || 'Verified User',
+        email: userData.email || 'user@growfi.com',
+        totalPoints: 150,
+        completedModules: 1,
+        currentLevel: 2,
+        creditScore: 720,
+        achievements: 3,
+        streak: 5,
+        moduleProgress: {
+          1: 100, // Budget Boss - completed
+          2: 50,  // Debt Destroyer - in progress
+          3: 0, 4: 0, 5: 0, 6: 0
+        },
+        preferences: {
+          notifications: true,
+          theme: 'light'
+        },
+        verified: true,
+        faceVerification: {
+          verified: true,
+          timestamp: userData.timestamp || new Date().toISOString(),
+          confidence: userData.confidence || 0.95
+        },
+        createdAt: userData.timestamp || new Date().toISOString()
+      };
+    }
+    
+    localStorage.setItem('growfi-user', JSON.stringify(updatedUser));
+    console.log('💾 User data saved in parent:', updatedUser);
+    
+    // Dispatch custom event to trigger user hook refresh
+    window.dispatchEvent(new CustomEvent('userDataUpdated'));
+    
+    // Navigate to dashboard with proper state management
+    console.log('🚀 Navigating to dashboard from parent...');
+    
+    // Use a callback to ensure the custom event listener has time to update user state
+    setTimeout(() => {
+      console.log('🔄 Triggering user refresh and navigation...');
+      // Double-check that the user data is saved properly before navigating
+      const savedUserCheck = localStorage.getItem('growfi-user');
+      if (savedUserCheck) {
+        const parsedUserCheck = JSON.parse(savedUserCheck);
+        console.log('✅ User verification confirmed:', parsedUserCheck.verified, parsedUserCheck.faceVerification?.verified);
+      }
+      navigate('/dashboard', { replace: true });
+    }, 2500);
   };
 
   return (

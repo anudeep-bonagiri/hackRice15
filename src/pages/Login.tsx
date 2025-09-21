@@ -15,19 +15,106 @@ const Login = () => {
 
   // Simple login handlers
   const handleLogin = () => {
-    // For demo purposes, navigate directly to dashboard
+    // Create a verified user for quick login
+    const loginUser = {
+      id: 'login-user',
+      username: email || 'quickuser',
+      name: 'Logged In User',
+      email: email || 'user@growfi.com',
+      totalPoints: 0,
+      completedModules: 0,
+      currentLevel: 1,
+      creditScore: 650,
+      achievements: 0,
+      streak: 0,
+      moduleProgress: {
+        1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
+      },
+      preferences: {
+        notifications: true,
+        theme: 'light'
+      },
+      verified: true,
+      createdAt: new Date().toISOString()
+    };
+    
+    // Clear demo mode and set regular user
+    localStorage.removeItem('growfi-demo-mode');
+    localStorage.setItem('growfi-user', JSON.stringify(loginUser));
+    
+    // Trigger user data refresh
+    window.dispatchEvent(new CustomEvent('userDataUpdated'));
+    
     navigate('/dashboard');
   };
 
   const handleSignup = () => {
-    // For demo purposes, navigate directly to dashboard
+    // Create a verified user for signup
+    const signupUser = {
+      id: 'signup-user',
+      username: email || 'newuser',
+      name: 'New User',
+      email: email || 'newuser@growfi.com',
+      totalPoints: 0,
+      completedModules: 0,
+      currentLevel: 1,
+      creditScore: 600,
+      achievements: 0,
+      streak: 0,
+      moduleProgress: {
+        1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
+      },
+      preferences: {
+        notifications: true,
+        theme: 'light'
+      },
+      verified: true,
+      createdAt: new Date().toISOString()
+    };
+    
+    // Clear demo mode and set regular user
+    localStorage.removeItem('growfi-demo-mode');
+    localStorage.setItem('growfi-user', JSON.stringify(signupUser));
+    
+    // Trigger user data refresh
+    window.dispatchEvent(new CustomEvent('userDataUpdated'));
+    
     navigate('/dashboard');
   };
 
   const handleEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Email/password login logic would go here
-    // For demo purposes, navigate directly to dashboard
+    
+    // Create verified user with email/password login
+    const emailUser = {
+      id: 'email-user',
+      username: email.split('@')[0] || 'user',
+      name: 'Email User',
+      email: email,
+      totalPoints: 0,
+      completedModules: 0,
+      currentLevel: 1,
+      creditScore: 650,
+      achievements: 0,
+      streak: 0,
+      moduleProgress: {
+        1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
+      },
+      preferences: {
+        notifications: true,
+        theme: 'light'
+      },
+      verified: true,
+      createdAt: new Date().toISOString()
+    };
+    
+    // Clear demo mode and set regular user
+    localStorage.removeItem('growfi-demo-mode');
+    localStorage.setItem('growfi-user', JSON.stringify(emailUser));
+    
+    // Trigger user data refresh
+    window.dispatchEvent(new CustomEvent('userDataUpdated'));
+    
     navigate('/dashboard');
   };
 

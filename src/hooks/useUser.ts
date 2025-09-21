@@ -16,6 +16,12 @@ interface UserProgress {
     notifications: boolean;
     theme: string;
   };
+  verified?: boolean;
+  faceVerification?: {
+    verified: boolean;
+    timestamp: string;
+    confidence: number;
+  };
   createdAt: string;
 }
 
@@ -85,6 +91,7 @@ export const useUser = (): UseUserReturn => {
           notifications: true,
           theme: 'light'
         },
+        verified: true, // Regular login users are considered verified
         createdAt: new Date().toISOString()
       };
       
@@ -116,6 +123,7 @@ export const useUser = (): UseUserReturn => {
           notifications: true,
           theme: 'light'
         },
+        verified: true, // Demo users are pre-verified
         createdAt: new Date().toISOString()
       };
       
@@ -124,6 +132,25 @@ export const useUser = (): UseUserReturn => {
     };
 
     initializeUser();
+  }, []);
+
+  // Listen for user data updates from face verification
+  useEffect(() => {
+    const handleUserDataUpdate = () => {
+      console.log('🔄 Refreshing user data after verification...');
+      setLoading(true);
+      // Add a small delay to ensure localStorage is written
+      setTimeout(() => {
+        refreshUser();
+        setLoading(false);
+      }, 100);
+    };
+
+    window.addEventListener('userDataUpdated', handleUserDataUpdate);
+    
+    return () => {
+      window.removeEventListener('userDataUpdated', handleUserDataUpdate);
+    };
   }, []);
 
   const updateProgress = (progress: Partial<UserProgress>) => {
@@ -140,11 +167,18 @@ export const useUser = (): UseUserReturn => {
 
   const refreshUser = () => {
     // For local-only mode, just reload from localStorage
+    console.log('🔄 Refreshing user data from localStorage...');
     const savedUser = localStorage.getItem('growfi-user');
     if (savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser);
+        console.log('📱 Loaded user data:', parsedUser);
         setUser(parsedUser);
+        
+        // Also update demo mode status
+        const demoMode = localStorage.getItem('growfi-demo-mode') === 'true';
+        setIsDemoMode(demoMode);
+        console.log('🎭 Demo mode status:', demoMode);
       } catch (err) {
         console.error('Error refreshing user data:', err);
       }
@@ -176,6 +210,7 @@ export const useUser = (): UseUserReturn => {
         notifications: true,
         theme: 'light'
       },
+      verified: true, // Exit demo users are verified
       createdAt: new Date().toISOString()
     };
     

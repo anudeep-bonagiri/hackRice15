@@ -12,6 +12,7 @@ import Module from "./pages/Module";
 import CreditReport from "./pages/CreditReport";
 import FaceVerification from "./pages/FaceVerification";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -25,11 +26,27 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/demo" element={<DemoLogin />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/modules" element={<Modules />} />
-          <Route path="/module/:id" element={<Module />} />
-          <Route path="/credit-report" element={<CreditReport />} />
           <Route path="/face-verify" element={<FaceVerification />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute requireVerification={true}>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/modules" element={
+            <ProtectedRoute requireVerification={true}>
+              <Modules />
+            </ProtectedRoute>
+          } />
+          <Route path="/module/:id" element={
+            <ProtectedRoute requireVerification={true}>
+              <Module />
+            </ProtectedRoute>
+          } />
+          <Route path="/credit-report" element={
+            <ProtectedRoute requireVerification={true}>
+              <CreditReport />
+            </ProtectedRoute>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

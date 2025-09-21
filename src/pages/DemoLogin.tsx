@@ -11,10 +11,42 @@ const DemoLogin = () => {
 
   const handleEnterDemo = () => {
     setIsEnteringDemo(true);
+    
     // Set demo mode in localStorage
     localStorage.setItem('growfi-demo-mode', 'true');
-    // Clear any existing user data to start fresh
-    localStorage.removeItem('growfi-user');
+    
+    // Create demo user with verification
+    const demoUser = {
+      id: 'demo-user',
+      username: 'demo',
+      name: 'Demo User',
+      email: 'demo@growfi.com',
+      totalPoints: 150,
+      completedModules: 1,
+      currentLevel: 2,
+      creditScore: 720,
+      achievements: 3,
+      streak: 5,
+      moduleProgress: {
+        1: 100, // Budget Boss - completed
+        2: 50,  // Debt Destroyer - in progress
+        3: 0,   // Emergency Fund Fortress
+        4: 0,   // Investment Explorer
+        5: 0,   // Credit Champion
+        6: 0    // Wealth Builder Pro
+      },
+      preferences: {
+        notifications: true,
+        theme: 'light'
+      },
+      verified: true,
+      createdAt: new Date().toISOString()
+    };
+    
+    localStorage.setItem('growfi-user', JSON.stringify(demoUser));
+    
+    // Trigger user data refresh
+    window.dispatchEvent(new CustomEvent('userDataUpdated'));
     
     setTimeout(() => {
       navigate('/dashboard');
