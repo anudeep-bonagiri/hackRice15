@@ -7,7 +7,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreCard } from '@/components/ScoreCard';
 import { AchievementSystem } from '@/components/AchievementSystem';
 import { useUser } from '@/hooks/useUser';
-import { BookOpen, Trophy, TrendingUp, Coins, Loader2 } from 'lucide-react';
+import { BookOpen, Trophy, TrendingUp, Coins, Gamepad2, Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -167,7 +167,7 @@ const Dashboard = () => {
         {/* Quick Actions */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-foreground mb-6">Continue Your Journey</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="hover-lift bg-gradient-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
@@ -224,6 +224,26 @@ const Dashboard = () => {
                   disabled={userProgress.totalPoints < 100}
                 >
                   {userProgress.totalPoints < 100 ? 'Earn 100+ Points' : 'Apply for Credit'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift bg-gradient-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3">
+                  <Gamepad2 className="w-5 h-5 text-purple-600" />
+                  Mini Game
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">
+                  Test your financial knowledge with our fun memory game!
+                </p>
+                <Button 
+                  onClick={() => navigate('/mini-game')}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  Play Game
                 </Button>
               </CardContent>
             </Card>
