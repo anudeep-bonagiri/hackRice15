@@ -1,4 +1,4 @@
-# HackRice 2024 - Requirements & Information
+# HackRice 2025 - Requirements & Information
 
 ## Important Dates & Deadlines
 

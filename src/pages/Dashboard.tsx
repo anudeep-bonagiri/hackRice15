@@ -349,7 +349,7 @@ const Dashboard = () => {
       </main>
 
       {/* AI Assistant Chatbot */}
-      <ChatBot />
+      {/*<ChatBot />*/}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-# HackRice 2024 - Prizes & Tracks
+# HackRice 2025 - Prizes & Tracks
 
 ## Total Prize Value: $10,200+
 

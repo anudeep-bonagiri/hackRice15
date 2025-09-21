@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Context
 
-This is a HackRice 2024 hackathon submission project. The hackathon has specific requirements:
+This is a HackRice 2025 hackathon submission project. The hackathon has specific requirements:
 - **Submission Deadline**: Sunday, 9/21, 9:00 AM
 - **Video Requirement**: 3-4 minute demo video for Devpost submission
 - **Track Limit**: Choose AT MOST 1 track
@@ -13,7 +13,7 @@ This is a HackRice 2024 hackathon submission project. The hackathon has specific
 ## Repository Structure
 
 ```
-hackrice-2024/
+hackrice-2025/
 ├── src/           # Source code (currently empty)
 ├── assets/        # Static assets (images, data files)
 ├── docs/          # Hackathon documentation and requirements
@@ -108,7 +108,7 @@ When implementing your project, consider these hackathon-optimized patterns:
 
 ## Important Notes
 
-- This repository was initialized for HackRice 2024 (hackrice.com)
+- This repository was initialized for HackRice 2025 (hackrice.com)
 - Submit through Devpost before Sunday 9/21 at 9:00 AM
 - The referenced setup repository (jrbros123/hackrice-2025.git) appears to be empty
 - Actual technology stack will be determined based on chosen track and implementation approach

@@ -1,8 +1,8 @@
 {
-  "name": "growfi-hackrice-2024",
+  "name": "growfi-hackrice-2025",
   "private": true,
   "version": "1.0.0",
-  "description": "GrowFi - Financial Literacy App for HackRice 2024",
+  "description": "GrowFi - Financial Literacy App for HackRice 2025",
   "type": "module",
   "scripts": {
     "dev": "vite",
